@@ -48,9 +48,9 @@ public:
 
 };
 
-inline std::ostream& operator<<(std::ostream& out, const DetachedFile* detached) {
-	out << "fileHashOp: " << detached->getFileHashOp() <<
-		"timestamp: " << hexStr(detached->fileDigest(), detached->fileDigestLenght()) << '\n';
+inline std::ostream& operator<<(std::ostream& out, const DetachedFile &detached) {
+	out << "fileHashOp: " << detached.getFileHashOp() <<
+		"timestamp: " << hexStr(detached.fileDigest(), detached.fileDigestLenght()) << '\n';
 	return out;
 }
 

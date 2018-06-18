@@ -39,17 +39,17 @@ public:
 
 };
 
-inline std::ostream& operator<<(std::ostream& out, Timestamp* timestamp) {
+inline std::ostream& operator<<(std::ostream& out, const Timestamp &timestamp) {
 
-	if (!timestamp->attestations.empty()) {
-		for (const auto &attestation: timestamp->attestations){
+	if (!timestamp.attestations.empty()) {
+		for (const auto &attestation: timestamp.attestations){
 			//out << attestation;
 		}
 	}
 
-	for (const auto &entry: timestamp->ops){
+	for (const auto &entry: timestamp.ops){
 
-		if(timestamp->ops.size()>1){
+		if(timestamp.ops.size()>1){
 			out <<  " -> ";
 		}
 		out << entry.first->tagName();

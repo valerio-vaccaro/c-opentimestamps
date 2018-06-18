@@ -13,7 +13,7 @@ class Timestamp {
 public:
 	uint8_t *msg;
 	uint32_t len;
-	std::map<Op, Timestamp*> ops;
+	std::map<Op*, Timestamp*> ops;
 	std::list<TimeAttestation> attestations;
 
 	Timestamp(uint8_t *msg, uint32_t len){
@@ -40,7 +40,21 @@ public:
 };
 
 inline std::ostream& operator<<(std::ostream& out, Timestamp* timestamp) {
-	out << "\n";
+
+	if (!timestamp->attestations.empty()) {
+		for (const auto &attestation: timestamp->attestations){
+			//out << attestation;
+		}
+	}
+
+	for (const auto &entry: timestamp->ops){
+
+		if(timestamp->ops.size()>1){
+			out <<  " -> ";
+		}
+		out << entry.first->tagName();
+		out << entry.second;
+	}
 	return out;
 }
 

@@ -15,12 +15,12 @@ int main() {
 	cout << op << "\n";
 
 	Timestamp *timestamp = new Timestamp(text, sizeof(text));
-	cout << timestamp << "\n";
+	//cout << timestamp << "\n";
 
 	uint8_t msg[] = "Hello, you!";
-	Timestamp subStamp = Timestamp(msg, sizeof(msg));
-	//timestamp->ops.insert(std::make_pair(op,subStamp));
-	//cout << timestamp << "\n";
+	Timestamp *subStamp = new Timestamp(msg, sizeof(msg));
+	timestamp->ops.insert(std::make_pair(op,subStamp));
+	cout << timestamp << "\n";
 
 	DetachedFile *detached = new DetachedFile(op, text, sizeof(text));
 	cout << detached << "\n";

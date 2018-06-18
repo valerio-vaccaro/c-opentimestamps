@@ -12,17 +12,21 @@
 #include "Common.h"
 
 class Op {
-public:
+private:
 	const int32_t MAX_MESSAGE_LENGHT = 4096;
 	const uint8_t TAG;
 	const std::string TAG_NAME;
-
+public:
 	Op(const uint8_t tag, const std::string &tag_name):
 	TAG(tag),
 	TAG_NAME(tag_name)
 	{};
-	virtual uint8_t tag() = 0;
-	virtual std::string tagName() = 0;
+	uint8_t tag(){
+		return this->TAG;
+	}
+	std::string tagName(){
+		return this->TAG_NAME;
+	}
 	virtual int length() = 0;
 	virtual int call(uint8_t *msg, int32_t len, uint8_t *output) = 0;
 
@@ -76,12 +80,6 @@ class OpAppend : public OpBinary {
 public:
 	OpAppend(uint8_t *arg, int32_t len) : OpBinary(0xf0, "append", arg, len) {}
 
-	uint8_t tag() override {
-		return TAG;
-	}
-	std::string tagName() override {
-		return TAG_NAME;
-	}
 	int length() override {
 		return sizeof(this->arg);
 	}
@@ -97,12 +95,6 @@ class OpPrepend : public OpBinary {
 public:
 	OpPrepend(uint8_t *arg, int32_t len) : OpBinary(0xf1, "prepend", arg, len) {}
 
-	uint8_t tag() override {
-		return TAG;
-	}
-	std::string tagName() override {
-		return TAG_NAME;
-	}
 	int length() override {
 		return sizeof(arg);
 	}
@@ -117,12 +109,7 @@ public:
 class OpSha1 : public OpCrypto {
 public:
 	OpSha1 (): OpCrypto(0x01, "sha1"){}
-	uint8_t tag() override {
-		return TAG;
-	}
-	std::string tagName() override {
-		return TAG_NAME;
-	}
+
 	int length() override {
 		return SHA_DIGEST_LENGTH;
 	}
@@ -139,12 +126,6 @@ class OpSha256 : public OpCrypto {
 public:
 	OpSha256 (): OpCrypto(0x02, "sha256"){}
 
-	uint8_t tag() override {
-		return TAG;
-	}
-	std::string tagName() override {
-		return TAG_NAME;
-	}
 	int length() override {
 		return SHA256_DIGEST_LENGTH;
 	}
@@ -161,12 +142,6 @@ class OpRipemd160 : public OpCrypto {
 public:
 	OpRipemd160 (): OpCrypto(0x03, "ripemd160"){}
 
-	uint8_t tag() override {
-		return TAG;
-	}
-	std::string tagName() override {
-		return TAG_NAME;
-	}
 	int length() override {
 		return RIPEMD160_DIGEST_LENGTH;
 	}

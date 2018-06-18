@@ -7,7 +7,7 @@
 int main() {
 
 	// EXAMPLE
-	uint8_t text[] = "Hello, World!";
+	const uint8_t text[] = "Hello, World!";
 	std::cout << text << std::endl;
 
 	OpSha256 op;
@@ -15,7 +15,7 @@ int main() {
 
 	Timestamp timestamp (text, sizeof(text));
 
-	uint8_t msg[] = "Hello, you!";
+	const uint8_t msg[] = "Hello, you!";
 	Timestamp subStamp (msg, sizeof(msg));
 	timestamp.ops.insert(std::make_pair(&op,&subStamp));
 	std::cout << timestamp << std::endl;

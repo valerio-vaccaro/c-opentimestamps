@@ -5,7 +5,7 @@
 #include <sstream>
 #include <iomanip>
 
-std::string hexStr(uint8_t *data, int len)
+std::string hexStr(const uint8_t *data, const int len)
 {
 	std::stringstream ss;
 	ss<<std::hex;
@@ -14,7 +14,9 @@ std::string hexStr(uint8_t *data, int len)
 	return ss.str();
 }
 
-int bytes(std::string data, uint8_t* bytes){
+/*
+FIX-ME anyway it's unused
+int bytes(std::string &data, uint8_t* bytes){
 	const char *pos = data.c_str();
 	for (size_t count = 0; count < sizeof bytes/sizeof *bytes; count++) {
 		sscanf(pos, "%2hhx", &bytes[count]);
@@ -22,6 +24,6 @@ int bytes(std::string data, uint8_t* bytes){
 	}
 	return sizeof(bytes);
 }
-
+*/
 
 #endif //C_OPENTIMESTAMPS_COMMON_H

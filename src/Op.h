@@ -28,7 +28,7 @@ public:
 		return this->TAG_NAME;
 	}
 	virtual int length() = 0;
-	virtual int call(uint8_t *msg, int32_t len, uint8_t *output) = 0;
+	virtual int call(const uint8_t *msg, const int32_t len, uint8_t *output) = 0;
 
 	//virtual uint32_t serialize(uint8_t *bytes) = 0;
 	//virtual int deserialize(uint8_t *bytes, uint32_t len) = 0;
@@ -83,7 +83,7 @@ public:
 	int length() override {
 		return this->len;
 	}
-	int call(uint8_t *msg, int32_t len, uint8_t *output) override {
+	int call(const uint8_t *msg, const int32_t len, uint8_t *output) override {
 		memcpy(output, this->arg, this->len);
 		memcpy(output+this->len, msg, len);
 		return this->len+len;
@@ -98,7 +98,7 @@ public:
 	int length() override {
 		return this->len;
 	}
-	int call(uint8_t *msg, int32_t len, uint8_t *output) override {
+	int call(const uint8_t *msg, const int32_t len, uint8_t *output) override {
 		memcpy(output, msg, len);
 		memcpy(output+len, this->arg, this->len);
 		return this->len+len;
@@ -113,7 +113,7 @@ public:
 	int length() override {
 		return SHA_DIGEST_LENGTH;
 	}
-	int call(uint8_t *msg, int32_t len, uint8_t *hash) override {
+	int call(const uint8_t *msg, const int32_t len, uint8_t *hash) override {
 		SHA_CTX sha1;
 		SHA1_Init(&sha1);
 		SHA1_Update(&sha1, msg, len);
@@ -129,7 +129,7 @@ public:
 	int length() override {
 		return SHA256_DIGEST_LENGTH;
 	}
-	int call(uint8_t *msg, int32_t len, uint8_t *hash) override {
+	int call(const uint8_t *msg, const int32_t len, uint8_t *hash) override {
 		SHA256_CTX sha256;
 		SHA256_Init(&sha256);
 		SHA256_Update(&sha256, msg, len);
@@ -145,7 +145,7 @@ public:
 	int length() override {
 		return RIPEMD160_DIGEST_LENGTH;
 	}
-	int call(uint8_t *msg, int32_t len, uint8_t *hash) override {
+	int call(const uint8_t *msg, const int32_t len, uint8_t *hash) override {
 		RIPEMD160_CTX ripemd160;
 		RIPEMD160_Init(&ripemd160);
 		RIPEMD160_Update(&ripemd160, msg, len);

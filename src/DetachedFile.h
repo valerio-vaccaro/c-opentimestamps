@@ -26,7 +26,7 @@ public:
 		this->timestamp = timestamp;
 	}
 
-	DetachedFile(OpCrypto* fileHashOp, uint8_t* msg, uint32_t len){
+	DetachedFile(OpCrypto* fileHashOp, const uint8_t* msg, const uint32_t len){
 		this->fileHashOp = fileHashOp;
 		uint8_t hash[this->fileHashOp->length()];
 		this->fileHashOp->call(msg, len, hash);
@@ -36,7 +36,7 @@ public:
 	OpCrypto * getFileHashOp() const {
 		return this->fileHashOp;
 	}
-	uint8_t* fileDigest() const {
+	const uint8_t* fileDigest() const {
 		return this->timestamp->getDigest();
 	}
 	uint32_t fileDigestLenght() const {

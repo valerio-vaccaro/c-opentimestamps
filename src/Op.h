@@ -81,7 +81,7 @@ public:
 	OpAppend(uint8_t *arg, int32_t len) : OpBinary(0xf0, "append", arg, len) {}
 
 	int length() override {
-		return sizeof(this->arg);
+		return this->len;
 	}
 	int call(uint8_t *msg, int32_t len, uint8_t *output) override {
 		memcpy(output, this->arg, this->len);
@@ -96,7 +96,7 @@ public:
 	OpPrepend(uint8_t *arg, int32_t len) : OpBinary(0xf1, "prepend", arg, len) {}
 
 	int length() override {
-		return sizeof(arg);
+		return this->len;
 	}
 	int call(uint8_t *msg, int32_t len, uint8_t *output) override {
 		memcpy(output, msg, len);

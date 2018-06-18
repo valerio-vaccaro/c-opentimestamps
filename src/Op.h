@@ -21,10 +21,10 @@ public:
 	TAG(tag),
 	TAG_NAME(tag_name)
 	{};
-	uint8_t tag(){
+	uint8_t tag() const{
 		return this->TAG;
 	}
-	std::string tagName(){
+	std::string tagName() const{
 		return this->TAG_NAME;
 	}
 	virtual int length() = 0;
@@ -58,13 +58,13 @@ public:
 
 // Define operators
 
-inline std::ostream& operator<<(std::ostream& out, OpBinary* op) {
-	out << op->tagName() << " " << hexStr(op->arg, op->len) << "\n";
+inline std::ostream& operator<<(std::ostream& out, const OpBinary &op) {
+	out << op.tagName() << " " << hexStr(op.arg, op.len) << "\n";
 	return out;
 }
 
-inline std::ostream& operator<<(std::ostream& out, OpUnary* op) {
-	out << op->tagName() << "\n";
+inline std::ostream& operator<<(std::ostream& out, const OpUnary &op) {
+	out << op.tagName() << "\n";
 	return out;
 }
 

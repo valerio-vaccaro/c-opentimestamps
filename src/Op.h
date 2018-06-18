@@ -14,10 +14,13 @@
 class Op {
 public:
 	const int32_t MAX_MESSAGE_LENGHT = 4096;
-	const uint8_t TAG = 0x00;
-	std::string TAG_NAME = "\0";
+	const uint8_t TAG;
+	const std::string TAG_NAME;
 
-	Op(){};
+	Op(const uint8_t tag, const std::string &tag_name):
+	TAG(tag),
+	TAG_NAME(tag_name)
+	{};
 	virtual uint8_t tag() = 0;
 	virtual std::string tagName() = 0;
 	virtual int length() = 0;
@@ -32,20 +35,21 @@ class OpBinary : public Op {
 public:
 	uint8_t* arg;
 	uint32_t len;
-	OpBinary(uint8_t* arg, uint32_t len) : Op(){
-		this->arg = arg;
-		this->len = len;
+	OpBinary(const uint8_t tag, const std::string &tag_name, uint8_t* arg, uint32_t len) :
+	Op(tag, tag_name),
+	arg(arg),
+	len(len){
 	}
 };
 
 class OpUnary : public Op {
 public:
-	OpUnary() : Op(){}
+	OpUnary(const uint8_t tag, const std::string &tag_name) : Op(tag, tag_name){}
 };
 
 class OpCrypto : public OpUnary {
 public:
-	OpCrypto() : OpUnary(){}
+	OpCrypto(const uint8_t tag, const std::string &tag_name) : OpUnary(tag, tag_name){}
 };
 
 // Define operators
@@ -70,10 +74,7 @@ struct less_op: std::binary_function<const Op *, const Op *, bool>
 // Binary class
 class OpAppend : public OpBinary {
 public:
-	const uint8_t TAG = 0xf0;
-	const std::string TAG_NAME = "append";
-
-	OpAppend(uint8_t *arg, int32_t len) : OpBinary(arg, len) {}
+	OpAppend(uint8_t *arg, int32_t len) : OpBinary(0xf0, "append", arg, len) {}
 
 	uint8_t tag() override {
 		return TAG;
@@ -94,9 +95,7 @@ public:
 
 class OpPrepend : public OpBinary {
 public:
-	const uint8_t TAG = 0xf1;
-	const std::string TAG_NAME = "prepend";
-	OpPrepend(uint8_t *arg, int32_t len) : OpBinary(arg, len) {}
+	OpPrepend(uint8_t *arg, int32_t len) : OpBinary(0xf1, "prepend", arg, len) {}
 
 	uint8_t tag() override {
 		return TAG;
@@ -117,9 +116,7 @@ public:
 // Crypto-Unary class
 class OpSha1 : public OpCrypto {
 public:
-	const uint8_t TAG = 0x02;
-	const std::string TAG_NAME = "sha1";
-
+	OpSha1 (): OpCrypto(0x01, "sha1"){}
 	uint8_t tag() override {
 		return TAG;
 	}
@@ -140,8 +137,7 @@ public:
 
 class OpSha256 : public OpCrypto {
 public:
-	const uint8_t TAG = 0x02;
-	const std::string TAG_NAME = "sha256";
+	OpSha256 (): OpCrypto(0x02, "sha256"){}
 
 	uint8_t tag() override {
 		return TAG;
@@ -163,8 +159,7 @@ public:
 
 class OpRipemd160 : public OpCrypto {
 public:
-	const uint8_t TAG = 0x03;
-	const std::string TAG_NAME = "ripemd160";
+	OpRipemd160 (): OpCrypto(0x03, "ripemd160"){}
 
 	uint8_t tag() override {
 		return TAG;

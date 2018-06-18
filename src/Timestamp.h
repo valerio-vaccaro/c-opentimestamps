@@ -11,18 +11,17 @@
 
 class Timestamp {
 public:
-	uint8_t *msg;
-	uint32_t len;
+	const uint8_t *msg;
+	const uint32_t len;
 	std::map<Op*, Timestamp*, less_op> ops;
 	std::list<TimeAttestation> attestations;
 
-	Timestamp(uint8_t *msg, uint32_t len){
-		this->len = len;
-		this->msg = (uint8_t*) malloc(len);
-		memcpy(this->msg, msg, len);
+	Timestamp(const uint8_t *msg, uint32_t len):
+	msg(msg),
+	len(len){
 	}
 
-	uint8_t* getDigest(){
+	const uint8_t* getDigest() const{
 		return this->msg;
 	}
 	uint32_t getDigestLenght(){

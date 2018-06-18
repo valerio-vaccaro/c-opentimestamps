@@ -1,0 +1,8 @@
+//
+// Created by luca on 17/06/2018.
+//
+
+#ifndef C_OPENTIMESTAMPS_COMMON_H
+#define C_OPENTIMESTAMPS_COMMON_H
+
+#endif //C_OPENTIMESTAMPS_COMMON_H

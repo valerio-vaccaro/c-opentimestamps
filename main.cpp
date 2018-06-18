@@ -1,24 +1,30 @@
+
 #include <iostream>
 #include "src/Op.h"
+#include "src/Timestamp.h"
+#include "src/DetachedFile.h"
 using namespace std;
 
 int main() {
 
 	// EXAMPLE
 	uint8_t text[] = "Hello, World!";
-	OpSha256 *opSha256 = new OpSha256();
-	uint8_t hash[SHA256_DIGEST_LENGTH];
-	opSha256->call(text,hash);
+	cout << text << "\n";
 
-	uint8_t output[sizeof(hash)+sizeof(text)];
-	OpAppend *opAppend = new OpAppend(hash);
-	opAppend->call(text,output);
+	OpSha256 *op = new OpSha256();
+	cout << op << "\n";
 
-	int i = 0;
-	for(i = 0; i < sizeof(output); i++)
-	{
-		printf("%02x", output[i]);
-	}
+	Timestamp *timestamp = new Timestamp(text, sizeof(text));
+	cout << timestamp << "\n";
+
+	uint8_t msg[] = "Hello, you!";
+	Timestamp subStamp = Timestamp(msg, sizeof(msg));
+	//timestamp->ops.insert(std::make_pair(op,subStamp));
+	//cout << timestamp << "\n";
+
+	DetachedFile *detached = new DetachedFile(op, text, sizeof(text));
+	cout << detached << "\n";
+
 
 	return 0;
 }

@@ -1,6 +1,3 @@
-//
-// Created by luca on 11/06/2018.
-//
 
 #ifndef C_OPENTIMESTAMPS_OP_H
 #define C_OPENTIMESTAMPS_OP_H
@@ -9,117 +6,162 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include <string>
 #include "openssl/sha.h"
 #include "openssl/ripemd.h"
+#include "Common.h"
 
-class Op {
+class OpInterface {
 public:
-	int32_t max_message_lenght = 4096;
-	uint8_t tag = 0x00;
+	const int32_t MAX_MESSAGE_LENGHT = 4096;
+	const uint8_t TAG = 0x00;
+	std::string TAG_NAME = "\0";
 
-	Op(){}
-	int length();
-	int call(uint8_t *msg, uint8_t *output);
+	OpInterface(){};
+	virtual std::string tagName() = 0;
+	virtual int length() = 0;
+	virtual int call(uint8_t *msg, int32_t len, uint8_t *output) = 0;
+
+	//virtual uint32_t serialize(uint8_t *bytes) = 0;
+	//virtual int deserialize(uint8_t *bytes, uint32_t len) = 0;
 };
 
-class OpBinary : Op {
-protected:
-	uint8_t* arg;
+class Op : public OpInterface{
 public:
-	OpBinary(uint8_t* arg){
+	Op(): OpInterface(){};
+	std::string tagName(){};
+	int length(){};
+	int call(uint8_t *msg, int32_t len, uint8_t *output){};
+	//uint32_t serialize(uint8_t *bytes) {};
+};
+
+class OpBinary : public Op {
+public:
+	uint8_t* arg;
+	uint32_t len;
+	OpBinary(uint8_t* arg, uint32_t len) : Op(){
 		this->arg = arg;
+		this->len = len;
 	}
 };
 
-class OpUnary : Op {
-protected:
-	uint8_t* arg;
+class OpUnary : public Op {
 public:
-	OpUnary(){}
+	OpUnary() : Op(){}
 };
 
-
-class OpCrypto : OpUnary {
+class OpCrypto : public OpUnary {
 public:
-	OpCrypto(){}
+	OpCrypto() : OpUnary(){}
 };
 
+// Concat as string for output
 
+inline std::ostream& operator<<(std::ostream& out, OpBinary* op) {
+	out << op->tagName() << " " << hexStr(op->arg, op->len) << "\n";
+	return out;
+}
+
+inline std::ostream& operator<<(std::ostream& out, OpUnary* op) {
+	out << op->tagName() << "\n";
+	return out;
+}
 
 // Binary class
-class OpAppend : OpBinary {
+class OpAppend : public OpBinary {
 public:
 	const uint8_t TAG = 0xf0;
-	OpAppend(uint8_t *arg) : OpBinary(arg) {}
-	int length() {
+	const std::string TAG_NAME = "append\0";
+
+	OpAppend(uint8_t *arg, int32_t len) : OpBinary(arg, len) {}
+	std::string tagName() override {
+		return TAG_NAME;
+	}
+	int length() override {
 		return sizeof(this->arg);
 	}
-	int call(uint8_t *msg, uint8_t *output){
-		memcpy(output, this->arg, sizeof(this->arg));
-		memcpy(output+sizeof(this->arg), msg, sizeof(msg));
-		return sizeof(this->arg)+sizeof(msg);
+	int call(uint8_t *msg, int32_t len, uint8_t *output) override {
+		memcpy(output, this->arg, this->len);
+		memcpy(output+this->len, msg, len);
+		return this->len+len;
 	}
+
 };
 
-class OpPrepend : OpBinary {
+class OpPrepend : public OpBinary {
 public:
 	const uint8_t TAG = 0xf1;
-	OpPrepend(uint8_t *arg) : OpBinary(arg) {}
-	int length() {
+	const std::string TAG_NAME = "prepend\0";
+	OpPrepend(uint8_t *arg, int32_t len) : OpBinary(arg, len) {}
+	std::string tagName() override {
+		return TAG_NAME;
+	}
+	int length() override {
 		return sizeof(arg);
 	}
-	int call(uint8_t *msg, uint8_t *output){
-		memcpy(output, msg, sizeof(msg));
-		memcpy(output+sizeof(msg), this->arg, sizeof(this->arg));
-		return sizeof(this->arg)+sizeof(msg);
+	int call(uint8_t *msg, int32_t len, uint8_t *output) override {
+		memcpy(output, msg, len);
+		memcpy(output+len, this->arg, this->len);
+		return this->len+len;
 	}
 };
 
 // Crypto-Unary class
-class OpSha1 : OpCrypto {
+class OpSha1 : public OpCrypto {
 public:
 	const uint8_t TAG = 0x02;
+	const std::string TAG_NAME = "sha1\0";
 
-	int length() {
+	std::string tagName() override {
+		return TAG_NAME;
+	}
+	int length() override {
 		return SHA_DIGEST_LENGTH;
 	}
-	int call(uint8_t *msg, uint8_t *hash)
-	{
+	int call(uint8_t *msg, int32_t len, uint8_t *hash) override {
 		SHA_CTX sha1;
 		SHA1_Init(&sha1);
-		SHA1_Update(&sha1, msg, sizeof(msg));
+		SHA1_Update(&sha1, msg, len);
 		SHA1_Final(hash, &sha1);
 		return SHA_DIGEST_LENGTH;
 	}
 };
 
-class OpSha256 : OpCrypto {
+class OpSha256 : public OpCrypto {
 public:
 	const uint8_t TAG = 0x02;
-	int length() {
+	const std::string TAG_NAME = "sha256\0";
+
+	std::string tagName() override {
+		return TAG_NAME;
+	}
+	int length() override {
 		return SHA256_DIGEST_LENGTH;
 	}
-	int call(uint8_t *msg, uint8_t *hash)
-	{
+	int call(uint8_t *msg, int32_t len, uint8_t *hash) override {
 		SHA256_CTX sha256;
 		SHA256_Init(&sha256);
-		SHA256_Update(&sha256, msg, sizeof(msg));
+		SHA256_Update(&sha256, msg, len);
 		SHA256_Final(hash, &sha256);
 		return SHA256_DIGEST_LENGTH;
 	}
 };
 
-class OpRipemd160 : OpCrypto {
+class OpRipemd160 : public OpCrypto {
 public:
 	const uint8_t TAG = 0x03;
-	int length() {
+	const std::string TAG_NAME = "ripemd160\0";
+
+	std::string tagName() override {
+		return TAG_NAME;
+	}
+	int length() override {
 		return RIPEMD160_DIGEST_LENGTH;
 	}
-	int call(uint8_t *msg, uint8_t *hash)
-	{
+	int call(uint8_t *msg, int32_t len, uint8_t *hash) override {
 		RIPEMD160_CTX ripemd160;
 		RIPEMD160_Init(&ripemd160);
-		RIPEMD160_Update(&ripemd160, msg, sizeof(msg));
+		RIPEMD160_Update(&ripemd160, msg, len);
 		RIPEMD160_Final(hash, &ripemd160);
 		return RIPEMD160_DIGEST_LENGTH;
 	}

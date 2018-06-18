@@ -3,27 +3,25 @@
 #include "src/Op.h"
 #include "src/Timestamp.h"
 #include "src/DetachedFile.h"
-using namespace std;
 
 int main() {
 
 	// EXAMPLE
 	uint8_t text[] = "Hello, World!";
-	cout << text << "\n";
+	std::cout << text << std::endl;
 
 	OpSha256 op;
-	cout << op << "\n";
+	std::cout << op << std::endl;
 
 	Timestamp timestamp (text, sizeof(text));
-	//cout << timestamp << "\n";
 
 	uint8_t msg[] = "Hello, you!";
 	Timestamp subStamp (msg, sizeof(msg));
 	timestamp.ops.insert(std::make_pair(&op,&subStamp));
-	cout << timestamp << "\n";
+	std::cout << timestamp << std::endl;
 
 	DetachedFile detached (&op, text, sizeof(text));
-	cout << detached << "\n";
+	std::cout << detached << std::endl;
 
 	return 0;
 }

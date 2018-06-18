@@ -13,7 +13,7 @@ class Timestamp {
 public:
 	uint8_t *msg;
 	uint32_t len;
-	std::map<Op*, Timestamp*> ops;
+	std::map<Op*, Timestamp*, less_op> ops;
 	std::list<TimeAttestation> attestations;
 
 	Timestamp(uint8_t *msg, uint32_t len){

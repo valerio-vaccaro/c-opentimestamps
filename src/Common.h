@@ -14,6 +14,17 @@ std::string hexStr(const uint8_t *data, const int len)
 	return ss.str();
 }
 
+bool compare(const uint8_t *a, const uint32_t a_len, const uint8_t *b, const uint32_t b_len){
+	if (a_len != b_len){
+		return false;
+	}
+	for (int i = 0;i < a_len;i++){
+		if (a[i]!=b[i])
+			return false;
+	}
+	return true;
+}
+
 /*
 FIX-ME anyway it's unused
 int bytes(std::string &data, uint8_t* bytes){

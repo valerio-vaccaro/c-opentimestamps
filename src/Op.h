@@ -10,9 +10,10 @@
 #include "openssl/sha.h"
 #include "openssl/ripemd.h"
 #include "Common.h"
+#include "Context.h"
 
 class Op {
-private:
+protected:
 	const int32_t MAX_MESSAGE_LENGHT = 4096;
 	const uint8_t TAG;
 	const std::string TAG_NAME;
@@ -29,10 +30,8 @@ public:
 	}
 	virtual int length() = 0;
 	virtual int call(const uint8_t *msg, const int32_t len, uint8_t *output) = 0;
-
-	//virtual uint32_t serialize(uint8_t *bytes) = 0;
-	//virtual int deserialize(uint8_t *bytes, uint32_t len) = 0;
-
+	virtual void serialize(Serialize ctx) = 0;
+	//virtual const void deserializeFromTag(Op* op, Deserialize ctx, uint8_t tag) = 0;
 };
 
 class OpBinary : public Op {
@@ -44,11 +43,20 @@ public:
 	arg(arg),
 	len(len){
 	}
+	void serialize(Serialize ctx) override {
+		uint8_t tag = this->tag();
+		ctx.writeVaruints(&tag, 1);
+		ctx.writeVaruints(arg, len);
+	}
 };
 
 class OpUnary : public Op {
 public:
 	OpUnary(const uint8_t tag, const std::string &tag_name) : Op(tag, tag_name){}
+	void serialize(Serialize ctx) override {
+		uint8_t tag = this->tag();
+		ctx.writeVaruints(&tag, 1);
+	}
 };
 
 class OpCrypto : public OpUnary {
@@ -88,7 +96,6 @@ public:
 		memcpy(output+this->len, msg, len);
 		return this->len+len;
 	}
-
 };
 
 class OpPrepend : public OpBinary {

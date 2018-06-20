@@ -10,8 +10,16 @@ int main() {
 	const uint8_t text[] = "Hello, World!";
 	std::cout << text << std::endl;
 
-	OpSha256 op;
+	OpSha256 op = OpSha256();
+	uint8_t hash[op.length()];
+	op.call(text, sizeof(text),hash);
 	std::cout << op << std::endl;
+
+	std::ofstream out("output.txt");
+	Serialize serialize(&out);
+	op.serialize(serialize);
+	out.close();
+
 
 	Timestamp timestamp (text, sizeof(text));
 
@@ -22,6 +30,10 @@ int main() {
 
 	DetachedFile detached (&op, text, sizeof(text));
 	std::cout << detached << std::endl;
+
+
+
+
 
 	return 0;
 }

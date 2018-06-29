@@ -72,12 +72,12 @@ public:
 
 class Serialize {
 private:
-	std::ofstream *stream;
+	std::ostream *stream;
 public:
-	Serialize(std::ofstream *stream) : stream(stream) {}
+	Serialize(std::ostream *stream) : stream(stream) {}
 	~Serialize() {}
 
-	std::ofstream* getStream(){
+	std::ostream* getStream(){
 		return stream;
 	}
 

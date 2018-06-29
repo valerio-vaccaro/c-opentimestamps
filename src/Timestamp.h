@@ -36,6 +36,43 @@ public:
 	bool equals(Timestamp timestamp);
 	Timestamp* add(Op op);
 
+	void serialize(Serialize ctx) {
+
+		// TODO: sort attestations
+		if (!this->attestations.empty()) {
+			for (const TimeAttestation &attestation: this->attestations){
+				ctx.write8(0xff);
+				ctx.write8(0x00);
+				if (this->attestations.back() == attestation){
+					attestation.serialize(ctx);
+				}
+			}
+		}
+
+		if (this->ops.empty()) {
+			ctx.write8(0x00);
+			if(!this->attestations.empty()) {
+				this->attestations.back().serialize(ctx);
+			}
+		} else if (this->ops.size() > 0) {
+			if (!this->attestations.empty()) {
+				ctx.write8(0xff);
+				ctx.write8(0x00);
+				this->attestations.back().serialize(ctx);
+			}
+			// TODO: sort ops
+			int counter = 0;
+			for (const auto &entry: this->ops) {
+				counter++;
+				if (counter < this->ops.size()) {
+					ctx.write8(0xff);
+				}
+				entry.first->serialize(ctx);
+				entry.second->serialize(ctx);
+			}
+		}
+	}
+
 };
 
 inline std::ostream& operator<<(std::ostream& out, const Timestamp &timestamp) {

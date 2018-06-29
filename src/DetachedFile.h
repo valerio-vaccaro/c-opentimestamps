@@ -46,10 +46,18 @@ public:
 		return this->timestamp;
 	}
 
+	void serialize(Serialize ctx){
+		ctx.write(this->HEADER_MAGIC, sizeof(this->HEADER_MAGIC));
+		ctx.writeVaruint(this->MAJOR_VERSION);
+		this->fileHashOp->serialize(ctx);
+		ctx.write(this->timestamp->msg,this->timestamp->len);
+		this->timestamp->serialize(ctx);
+	}
+
 };
 
 inline std::ostream& operator<<(std::ostream& out, const DetachedFile &detached) {
-	out << "fileHashOp: " << detached.getFileHashOp() <<
+	out << "fileHashOp: " << *detached.getFileHashOp() <<
 		"timestamp: " << hexStr(detached.fileDigest(), detached.fileDigestLenght()) << std::endl;
 	return out;
 }

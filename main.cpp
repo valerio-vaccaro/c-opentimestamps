@@ -22,20 +22,14 @@ int main() {
 	timestamp.ops.insert(std::make_pair(&op,&subStamp));
 	std::cout << timestamp << std::endl;
 
-	std::ostringstream buf;
-	//std::ofstream out("output.txt");
-	//Serialize serialize(&std::cout);
-	Serialize serialize(&buf);
-	timestamp.serialize(serialize);
-	//out.close();
-	const char * string = buf.str().c_str();
-	std::cout << string;
-
 	DetachedFile detached (&op, text, sizeof(text));
 	std::cout << detached << std::endl;
 
-
-
+	std::ostringstream buf;
+	Serialize serialize(&buf);
+	detached.serialize(serialize);
+	const char * string = buf.str().c_str();
+	std::cout << string;
 
 
 	return 0;

@@ -20,12 +20,11 @@ public:
 	virtual void serialize_payload(Serialize ctx) const;
 	void serialize(Serialize ctx) const {
 		ctx.write(this->TAG,this->TAG_SIZE);
+
 		std::ostringstream buf;
 		Serialize payload_ctx(&buf);
 		this->serialize_payload(payload_ctx);
-		const uint8_t *payload = (const uint8_t *) buf.str().c_str();
-		const uint8_t len = buf.str().length();
-		ctx.write(payload, len);
+		ctx.getStream()->operator<<(payload_ctx.getStream());
 	}
 };
 

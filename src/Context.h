@@ -10,12 +10,19 @@
 #include <fstream>
 #include "Common.h"
 
+struct membuf : std::streambuf
+{
+	membuf(char* begin, char* end) {
+		this->setg(begin, begin, end);
+	}
+};
+
 class Deserialize
 {
 private:
-	std::ifstream* stream;
 public:
-	Deserialize(std::ifstream* stream) : stream(stream) {}
+	std::istream* stream;
+	Deserialize(std::istream* stream) : stream(stream) {}
 	~Deserialize() {}
 
 	uint8_t read8(){
@@ -29,7 +36,14 @@ public:
 		return obj;
 	}
 	void read(uint8_t* buffer, size_t len){
-		stream->read((char*)&buffer, len);
+		//stream->read((char*)&buffer, len);
+		std::size_t n = 0;
+		while( len > 0 && stream->good() ) {
+			stream->read(reinterpret_cast<char *>(&buffer[n]), len );
+			int i = stream->gcount();
+			n += i;
+			len -= i;
+		}
 	}
 
 	uint32_t readVaruint() {
@@ -45,12 +59,12 @@ public:
 		return value;
 	}
 
-	uint8_t readVaruints(const uint8_t* buffer, const size_t len){
+	uint8_t readVaruints(uint8_t* buffer, const size_t len){
 		uint32_t bufferLen = readVaruint();
 		if ((bufferLen & 0xff) > len) {
 			return 0;
 		}
-		stream->read((char*)&buffer, bufferLen);
+		read(buffer, bufferLen);
 		return bufferLen;
 	}
 

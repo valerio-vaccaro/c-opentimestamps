@@ -40,14 +40,14 @@ public:
 	Timestamp* getTimestamp() const {
 		return this->timestamp;
 	}
-	void serialize(Serialize ctx);
-	static DetachedFile* deserialize(Deserialize ctx);
+	void serialize(Serialize *ctx);
+	static DetachedFile* deserialize(Deserialize *ctx);
 
 };
 
 inline std::ostream& operator<<(std::ostream& out, const DetachedFile &detached) {
 	out << "op: " << *detached.getFileHashOp() <<
-		"digest: " << hexStr(detached.fileDigest(), detached.fileDigestLenght()) << '\n' <<
+		"digest: " << toHex(detached.fileDigest(), detached.fileDigestLenght()) << '\n' <<
 		*detached.getTimestamp() << std::endl;
 	return out;
 }

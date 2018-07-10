@@ -31,9 +31,9 @@ public:
 	}
 	virtual int length() = 0;
 	virtual int call(const uint8_t *msg, const int32_t len, uint8_t *output) = 0;
-	virtual void serialize(Serialize ctx) = 0;
-	static Op* deserializeFromTag(Deserialize ctx, uint8_t tag);
-	static Op* deserialize(Deserialize ctx);
+	virtual void serialize(Serialize *ctx) = 0;
+	static Op* deserializeFromTag(Deserialize *ctx, uint8_t tag);
+	static Op* deserialize(Deserialize *ctx);
 };
 
 class OpBinary : public Op {
@@ -47,19 +47,17 @@ public:
 			len(len) {
 	}
 
-	void serialize(Serialize ctx) override {
-		uint8_t tag = this->tag();
-		ctx.writeVaruints(&tag, 1);
-		ctx.writeVaruints(arg, len);
+	void serialize(Serialize *ctx) override {
+		ctx->write8(this->tag());
+		ctx->writeVaruints(arg, len);
 	}
 };
 
 class OpUnary : public Op {
 public:
 	OpUnary(const uint8_t tag, const std::string &tag_name) : Op(tag, tag_name){}
-	void serialize(Serialize ctx) override {
-		uint8_t tag = this->tag();
-		ctx.writeVaruints(&tag, 1);
+	void serialize(Serialize *ctx) override {
+		ctx->write8(this->tag());
 	}
 };
 
@@ -71,7 +69,7 @@ public:
 // Define operators
 
 inline std::ostream& operator<<(std::ostream& out, const OpBinary &op) {
-	out << op.tagName() << " " << hexStr(op.arg, op.len) << "\n";
+	out << op.tagName() << " " << toHex(op.arg, op.len) << "\n";
 	return out;
 }
 

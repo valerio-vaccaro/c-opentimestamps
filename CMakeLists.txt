@@ -10,5 +10,7 @@ if(OPENSSL_FOUND)
 endif()
 
 
-add_executable(c_opentimestamps src/Op.h main.cpp src/Timestamp.h src/Attestation.h src/Timestamp.cpp src/DetachedFile.h src/Common.h)
+file(GLOB SOURCE_FILES "src/*.cpp")
+file(GLOB HEADER_FILES  "src/*.h")
+add_executable(c_opentimestamps main.cpp ${SOURCE_FILES} ${HEADER_FILES})
 target_link_libraries(${PROJECT_NAME} OpenSSL::Crypto)

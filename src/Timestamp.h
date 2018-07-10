@@ -14,7 +14,7 @@ public:
 	const uint8_t *msg;
 	const uint32_t len;
 	std::map<Op*, Timestamp*, less_op> ops;
-	std::list<TimeAttestation> attestations;
+	std::list<TimeAttestation*> attestations;
 
 	Timestamp(const uint8_t *msg, uint32_t len):
 	msg(msg),
@@ -29,20 +29,25 @@ public:
 	}
 
 	static Timestamp deserialize(uint8_t *ots, uint8_t *initialMsg, uint32_t len);
-	void serialize(uint8_t* output);
 	void merge(Timestamp other);
-	char* strTree();
 	bool isTimestampComplete();
 	bool equals(Timestamp timestamp);
 	Timestamp* add(Op op);
 
+	static void do_tag_or_attestation(Timestamp* timestamp, Deserialize ctx, uint8_t tag);
+	static Timestamp* deserialize(Deserialize ctx, uint8_t *initialMsg, uint32_t len );
+	void serialize(Serialize ctx);
 };
 
 inline std::ostream& operator<<(std::ostream& out, const Timestamp &timestamp) {
 
 	if (!timestamp.attestations.empty()) {
 		for (const auto &attestation: timestamp.attestations){
-			//out << attestation;
+			if (PendingAttestation* pending = dynamic_cast<PendingAttestation *>(attestation)) {
+				out << pending;
+			}else if (BitcoinBlockHeaderAttestation* bitcoin = dynamic_cast<BitcoinBlockHeaderAttestation *>(attestation)) {
+				out << bitcoin;
+			}
 		}
 	}
 
@@ -51,8 +56,13 @@ inline std::ostream& operator<<(std::ostream& out, const Timestamp &timestamp) {
 		if(timestamp.ops.size()>1){
 			out <<  " -> ";
 		}
-		out << entry.first->tagName();
-		out << entry.second;
+
+		if (OpUnary* unary = dynamic_cast<OpUnary *>(entry.first)) {
+			out << *unary;
+		}else if (OpBinary* binary = dynamic_cast<OpBinary *>(entry.first)) {
+			out << *binary;
+		}
+		out << *entry.second;
 	}
 	return out;
 }

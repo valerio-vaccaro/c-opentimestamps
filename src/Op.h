@@ -2,21 +2,23 @@
 #ifndef C_OPENTIMESTAMPS_OP_H
 #define C_OPENTIMESTAMPS_OP_H
 
-
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <string>
+#include <map>
 #include "openssl/sha.h"
 #include "openssl/ripemd.h"
 #include "Common.h"
+#include "Context.h"
 
 class Op {
-private:
-	const int32_t MAX_MESSAGE_LENGHT = 4096;
+protected:
+	static const int32_t MAX_MESSAGE_LENGHT = 4096;
 	const uint8_t TAG;
 	const std::string TAG_NAME;
 public:
+	static const int32_t MAX_RESULT_LENGTH = 4096;
 	Op(const uint8_t tag, const std::string &tag_name):
 	TAG(tag),
 	TAG_NAME(tag_name)
@@ -29,26 +31,36 @@ public:
 	}
 	virtual int length() = 0;
 	virtual int call(const uint8_t *msg, const int32_t len, uint8_t *output) = 0;
-
-	//virtual uint32_t serialize(uint8_t *bytes) = 0;
-	//virtual int deserialize(uint8_t *bytes, uint32_t len) = 0;
-
+	virtual void serialize(Serialize ctx) = 0;
+	static Op* deserializeFromTag(Deserialize ctx, uint8_t tag);
+	static Op* deserialize(Deserialize ctx);
 };
 
 class OpBinary : public Op {
 public:
-	uint8_t* arg;
+	uint8_t *arg;
 	uint32_t len;
-	OpBinary(const uint8_t tag, const std::string &tag_name, uint8_t* arg, uint32_t len) :
-	Op(tag, tag_name),
-	arg(arg),
-	len(len){
+
+	OpBinary(const uint8_t tag, const std::string &tag_name, uint8_t *arg, uint32_t len) :
+			Op(tag, tag_name),
+			arg(arg),
+			len(len) {
+	}
+
+	void serialize(Serialize ctx) override {
+		uint8_t tag = this->tag();
+		ctx.writeVaruints(&tag, 1);
+		ctx.writeVaruints(arg, len);
 	}
 };
 
 class OpUnary : public Op {
 public:
 	OpUnary(const uint8_t tag, const std::string &tag_name) : Op(tag, tag_name){}
+	void serialize(Serialize ctx) override {
+		uint8_t tag = this->tag();
+		ctx.writeVaruints(&tag, 1);
+	}
 };
 
 class OpCrypto : public OpUnary {
@@ -88,7 +100,6 @@ public:
 		memcpy(output+this->len, msg, len);
 		return this->len+len;
 	}
-
 };
 
 class OpPrepend : public OpBinary {
@@ -124,7 +135,7 @@ public:
 
 class OpSha256 : public OpCrypto {
 public:
-	OpSha256 (): OpCrypto(0x02, "sha256"){}
+	OpSha256 (): OpCrypto(0x08, "sha256"){}
 
 	int length() override {
 		return SHA256_DIGEST_LENGTH;
@@ -153,6 +164,8 @@ public:
 		return RIPEMD160_DIGEST_LENGTH;
 	}
 };
+
+
 
 
 #endif //C_OPENTIMESTAMPS_OP_H

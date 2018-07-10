@@ -89,7 +89,7 @@ private:
 public:
 	std::ostringstream *stream;
 	int len;
-	Serialize(std::ostream *ostringstream) : stream(stream), len(0) {}
+	Serialize(std::ostringstream *ostringstream) : stream(ostringstream), len(0) {}
 	~Serialize() {}
 
 	std::ostream* getStream(){

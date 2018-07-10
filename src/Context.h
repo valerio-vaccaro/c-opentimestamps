@@ -86,9 +86,10 @@ public:
 
 class Serialize {
 private:
-	std::ostream *stream;
 public:
-	Serialize(std::ostream *stream) : stream(stream) {}
+	std::ostringstream *stream;
+	int len;
+	Serialize(std::ostream *ostringstream) : stream(stream), len(0) {}
 	~Serialize() {}
 
 	std::ostream* getStream(){
@@ -96,11 +97,13 @@ public:
 	}
 
 	void write(const uint8_t *buffer, const size_t len) {
-		stream->write((char *) &buffer, len);
+		stream->write((char *) buffer, len);
+		this->len+=len;
 	}
 
 	void write8(const uint8_t obj) {
 		stream->write((char *) &obj, 1);
+		this->len++;
 	}
 
 	void write32(const uint32_t obj) {
@@ -108,6 +111,7 @@ public:
 		for (int i=0; i<4 ;++i)
 			d[i] = ((uint8_t*)&obj)[3-i];
 		stream->write((char *) d, 4);
+		this->len++;
 	}
 
 	void writeVaruint(const uint32_t value) {

@@ -34,9 +34,9 @@ public:
 	bool equals(Timestamp timestamp);
 	Timestamp* add(Op op);
 
-	static void do_tag_or_attestation(Timestamp* timestamp, Deserialize ctx, uint8_t tag);
-	static Timestamp* deserialize(Deserialize ctx, uint8_t *initialMsg, uint32_t len );
-	void serialize(Serialize ctx);
+	static void do_tag_or_attestation(Timestamp* timestamp, Deserialize *ctx, uint8_t tag);
+	static Timestamp* deserialize(Deserialize *ctx, uint8_t *initialMsg, uint32_t len );
+	void serialize(Serialize *ctx);
 };
 
 inline std::ostream& operator<<(std::ostream& out, const Timestamp &timestamp) {

@@ -1,16 +1,23 @@
 #include "Common.h"
 
-std::string hexStr(const uint8_t *data, const int len);
+std::string toHex(const uint8_t *data, const int len);
+std::string toHex(const uint8_t data);
 char* toBytes(const std::string& hex);
 bool compare(const uint8_t *a, const uint32_t a_len, const uint8_t *b, const uint32_t b_len);
 
 
-std::string hexStr(const uint8_t *data, const int len)
+std::string toHex(const uint8_t data)
+{
+	std::stringstream ss;
+	ss<<std::hex << std::setw(2) << std::setfill('0') << (int)data;
+	return ss.str();
+}
+std::string toHex(const uint8_t *data, const int len)
 {
 	std::stringstream ss;
 	ss<<std::hex;
 	for(int i(0);i<len;++i)
-		ss<<(int)data[i];
+		ss << std::hex << std::setw(2) << std::setfill('0') << (int)data[i];
 	return ss.str();
 }
 

@@ -8,24 +8,24 @@ const uint8_t DetachedFile::HEADER_MAGIC[31] = {(uint8_t) 0x00, (uint8_t) 0x4f, 
 								  (uint8_t) 0x94};
 const uint8_t DetachedFile::MAJOR_VERSION = 1;
 
-void DetachedFile::serialize(Serialize ctx){
-	ctx.write(HEADER_MAGIC, sizeof(HEADER_MAGIC));
-	ctx.writeVaruint(MAJOR_VERSION);
+void DetachedFile::serialize(Serialize *ctx){
+	ctx->write(HEADER_MAGIC, sizeof(HEADER_MAGIC));
+	ctx->writeVaruint(MAJOR_VERSION);
 	this->fileHashOp->serialize(ctx);
-	ctx.write(this->timestamp->msg,this->timestamp->len);
+	ctx->write(this->timestamp->msg,this->timestamp->len);
 	this->timestamp->serialize(ctx);
 }
 
-DetachedFile* DetachedFile::deserialize(Deserialize ctx) {
-	ctx.assertMagic(HEADER_MAGIC, sizeof(HEADER_MAGIC));
-	uint8_t major = ctx.readVaruint();
+DetachedFile* DetachedFile::deserialize(Deserialize *ctx) {
+	ctx->assertMagic(HEADER_MAGIC, sizeof(HEADER_MAGIC));
+	uint8_t major = ctx->readVaruint();
 	if (major != MAJOR_VERSION) {
 		return nullptr;
 	}
 	OpCrypto *fileHashOp = (OpCrypto *) OpCrypto::deserialize(ctx);
-	uint8_t fileHash[fileHashOp->length()];
-	ctx.read(fileHash, fileHashOp->length());
+	uint8_t *fileHash = (uint8_t*)malloc(fileHashOp->length());
+	ctx->read(fileHash, fileHashOp->length());
 	Timestamp *timestamp = Timestamp::deserialize(ctx, fileHash, fileHashOp->length());
-	ctx.assertEof();
+	ctx->assertEof();
 	return new DetachedFile(fileHashOp, timestamp);
 }

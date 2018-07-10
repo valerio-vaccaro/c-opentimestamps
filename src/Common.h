@@ -5,7 +5,8 @@
 #include <sstream>
 #include <iomanip>
 
-extern std::string hexStr(const uint8_t *data, const int len);
+extern std::string toHex(const uint8_t *data, const int len);
+extern std::string toHex(const uint8_t data);
 extern char* toBytes(const std::string& hex);
 extern bool compare(const uint8_t *a, const uint32_t a_len, const uint8_t *b, const uint32_t b_len);
 

@@ -17,9 +17,9 @@ protected:
 public:
 	TimeAttestation(const uint8_t *tag) : TAG(tag){}
 	virtual bool operator==(TimeAttestation& other);
-	virtual void serialize_payload(Serialize ctx) const = 0;
-	void serialize(Serialize ctx) const;
-	static TimeAttestation* deserialize(Deserialize ctx);
+	virtual void serialize_payload(Serialize *ctx) const = 0;
+	void serialize(Serialize *ctx) const;
+	static TimeAttestation* deserialize(Deserialize *ctx);
 };
 
 class PendingAttestation : public TimeAttestation{
@@ -30,8 +30,9 @@ private:
 public:
 	static const uint8_t TAG[TimeAttestation::TAG_SIZE];
 	PendingAttestation(uint8_t* msg, uint32_t len): TimeAttestation(TAG){
-		this->uri = (uint8_t*)malloc(len);
 		this->len = len;
+		this->uri = (uint8_t*) malloc(len);
+		std::copy(msg, msg + len, this->uri);
 	}
 	uint8_t * getUri() {
 		return this->uri;
@@ -45,8 +46,8 @@ public:
 		PendingAttestation *ptr = dynamic_cast<PendingAttestation *>(&other);
 		return strncmp((char*)this->uri,(char*)ptr->uri,this->len);
 	}
-	void serialize_payload(Serialize ctx) const override;
-	static PendingAttestation* deserialize(Deserialize ctx);
+	void serialize_payload(Serialize *ctx) const override;
+	static PendingAttestation* deserialize(Deserialize *ctx);
 };
 
 
@@ -66,8 +67,8 @@ public:
 		return this->height == other.height;
 	}
 
-	void serialize_payload(Serialize ctx) const override;
-	static BitcoinBlockHeaderAttestation* deserialize(Deserialize ctx);
+	void serialize_payload(Serialize *ctx) const override;
+	static BitcoinBlockHeaderAttestation* deserialize(Deserialize *ctx);
 };
 
 inline std::ostream& operator<<(std::ostream& out, PendingAttestation* attestation) {

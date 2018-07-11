@@ -87,9 +87,9 @@ public:
 class Serialize {
 private:
 public:
-	std::ostringstream *stream;
+	std::ostream *stream;
 	int len;
-	Serialize(std::ostringstream *ostringstream) : stream(ostringstream), len(0) {}
+	Serialize(std::ostream *stream) : stream(stream), len(0) {}
 	~Serialize() {}
 
 	std::ostream* getStream(){

@@ -22,7 +22,6 @@ int main() {
 	// SERIALIZE
 	std::ostringstream out;
 	Serialize serialize(&out);
-	serialize.stream = &out;
 	detachedFile->serialize(&serialize);
 	uint8_t* output = (uint8_t*) out.str().data();
 	std::cout << toHex(output, serialize.len) << std::endl;

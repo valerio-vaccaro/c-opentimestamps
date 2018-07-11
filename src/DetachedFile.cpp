@@ -23,7 +23,7 @@ DetachedFile* DetachedFile::deserialize(Deserialize *ctx) {
 		return nullptr;
 	}
 	OpCrypto *fileHashOp = (OpCrypto *) OpCrypto::deserialize(ctx);
-	uint8_t *fileHash = (uint8_t*)malloc(fileHashOp->length());
+	uint8_t *fileHash = new uint8_t [fileHashOp->length()];
 	ctx->read(fileHash, fileHashOp->length());
 	Timestamp *timestamp = Timestamp::deserialize(ctx, fileHash, fileHashOp->length());
 	ctx->assertEof();

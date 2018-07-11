@@ -13,7 +13,7 @@ void TimeAttestation::serialize(Serialize *ctx) const {
 	this->serialize_payload(&payload_ctx);
 
 	uint8_t* payload = (uint8_t*)buf.str().data();
-	uint8_t *buffer = (uint8_t*)malloc(payload_ctx.len);
+	uint8_t *buffer = new uint8_t [payload_ctx.len];
 	for (int i = 0;i<payload_ctx.len;i++){
 		buffer[i]=payload[i];
 	}

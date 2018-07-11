@@ -31,7 +31,7 @@ public:
 	static const uint8_t TAG[TimeAttestation::TAG_SIZE];
 	PendingAttestation(uint8_t* msg, uint32_t len): TimeAttestation(TAG){
 		this->len = len;
-		this->uri = (uint8_t*) malloc(len);
+		this->uri = new uint8_t [len];
 		std::copy(msg, msg + len, this->uri);
 	}
 	uint8_t * getUri() {

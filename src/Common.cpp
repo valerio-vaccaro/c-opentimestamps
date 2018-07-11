@@ -24,7 +24,7 @@ std::string toHex(const uint8_t *data, const int len)
 char* toBytes(const std::string& hex){
 	//std::vector<char> bytes;
 	size_t size = hex.size();
-	char *bytes = (char*)malloc(sizeof(uint8_t) * ((size/2)+1));
+	char *bytes = new char [sizeof(uint8_t) * ((size/2)+1)];
 	int j=0;
 	for (unsigned int i = 0; i < hex.length(); i += 2){
 		std::string byteString = hex.substr(i, 2);

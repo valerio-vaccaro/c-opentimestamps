@@ -37,6 +37,9 @@ public:
 	uint8_t * getUri() {
 		return this->uri;
 	}
+	uint8_t getUriLen() {
+		return this->len;
+	}
 	static bool checkUri(uint8_t* uri, uint32_t len){
 		// TODO
 		return true;
@@ -72,7 +75,9 @@ public:
 };
 
 inline std::ostream& operator<<(std::ostream& out, PendingAttestation* attestation) {
-	out <<  "PendingAttestation("  << attestation->getUri() <<  + ")";
+	out <<  "PendingAttestation(";
+	out.write((char*) attestation->getUri(), attestation->getUriLen());
+	out << ")";
 	return out;
 }
 

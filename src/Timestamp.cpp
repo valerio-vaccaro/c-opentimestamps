@@ -1,6 +1,8 @@
 
 #include "Timestamp.h"
 
+namespace ots{
+
 void Timestamp::do_tag_or_attestation(Timestamp *timestamp, Deserialize *ctx, uint8_t tag){
 	if (tag == 0x00){
 		TimeAttestation *attestation = TimeAttestation::deserialize(ctx);
@@ -63,3 +65,5 @@ void Timestamp::serialize(Serialize *ctx) {
 		}
 	}
 }
+
+} // namespace ots

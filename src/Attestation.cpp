@@ -1,6 +1,7 @@
 #include "Attestation.h"
 #include "Common.h"
 
+namespace ots{
 
 const uint8_t PendingAttestation::TAG[TimeAttestation::TAG_SIZE] = {(uint8_t) 0x83, (uint8_t) 0xdf, (uint8_t) 0xe3, (uint8_t) 0x0d, (uint8_t) 0x2e, (uint8_t) 0xf9, (uint8_t) 0x0c, (uint8_t) 0x8e};
 const uint8_t BitcoinBlockHeaderAttestation::TAG[TimeAttestation::TAG_SIZE] = {(uint8_t) 0x05, (uint8_t) 0x88, (uint8_t) 0x96, (uint8_t) 0x0d, (uint8_t) 0x73, (uint8_t) 0xd7, (uint8_t) 0x19, (uint8_t) 0x01};
@@ -71,3 +72,5 @@ BitcoinBlockHeaderAttestation* BitcoinBlockHeaderAttestation::deserialize(Deseri
 	uint32_t height = ctx->readVaruint();
 	return new BitcoinBlockHeaderAttestation(height);
 }
+
+} // namespace ots

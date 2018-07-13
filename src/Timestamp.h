@@ -30,11 +30,10 @@ public:
 		return this->len;
 	}
 
-	static Timestamp deserialize(uint8_t *ots, uint8_t *initialMsg, uint32_t len);
-	void merge(Timestamp other);
+	void merge(Timestamp *other);
 	bool isTimestampComplete();
 	bool equals(Timestamp timestamp);
-	Timestamp* add(Op op);
+	Timestamp* add(Op *op);
 
 	static void do_tag_or_attestation(Timestamp* timestamp, Deserialize *ctx, uint8_t tag);
 	static Timestamp* deserialize(Deserialize *ctx, uint8_t *initialMsg, uint32_t len );

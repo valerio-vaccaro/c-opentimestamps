@@ -66,4 +66,36 @@ void Timestamp::serialize(Serialize *ctx) {
 	}
 }
 
+
+	Timestamp* Timestamp::add(Op *op) {
+		// Add key
+		// Returns the value associated with that key
+		if (this->ops.count(op)>0) {
+			return this->ops.at(op);
+		}
+		uint8_t *buffer = new uint8_t [op->length()];
+		op->call(this->msg,this->len,buffer);
+		Timestamp *stamp = new Timestamp(buffer,op->length());
+		this->ops.insert(std::pair <Op*, Timestamp*> (op, stamp));
+		return stamp;
+	}
+
+	void Timestamp::merge(Timestamp *other) {
+		// Add all operations and attestations from another timestamp to this one
+		if (!compare(this->msg, this->len, other->msg, other->len)) {
+			// Can't merge timestamps for different messages together
+			return;
+		}
+		for (TimeAttestation *attestation: other->attestations) {
+			this->attestations.push_back(attestation);
+		};
+		for (const auto &entry: other->ops) {
+			Op *other_op = entry.first;
+			Timestamp *other_op_stamp = entry.second;
+
+			Timestamp *our_op_stamp = this->add(other_op);
+			our_op_stamp->merge(other_op_stamp);
+		}
+	}
+
 } // namespace ots

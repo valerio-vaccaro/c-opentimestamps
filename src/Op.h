@@ -90,6 +90,7 @@ struct less_op: std::binary_function<const Op *, const Op *, bool>
 // Binary class
 class OpAppend : public OpBinary {
 public:
+	static uint8_t TAG;
 	OpAppend(uint8_t *arg, int32_t len) : OpBinary(0xf0, "append", arg, len) {}
 
 	int length() override {
@@ -104,6 +105,7 @@ public:
 
 class OpPrepend : public OpBinary {
 public:
+	static uint8_t TAG;
 	OpPrepend(uint8_t *arg, int32_t len) : OpBinary(0xf1, "prepend", arg, len) {}
 
 	int length() override {
@@ -119,6 +121,7 @@ public:
 // Crypto-Unary class
 class OpSha1 : public OpCrypto {
 public:
+	static uint8_t TAG;
 	OpSha1 (): OpCrypto(0x01, "sha1"){}
 
 	int length() override {
@@ -135,6 +138,7 @@ public:
 
 class OpSha256 : public OpCrypto {
 public:
+	static uint8_t TAG;
 	OpSha256 (): OpCrypto(0x08, "sha256"){}
 
 	int length() override {
@@ -151,6 +155,7 @@ public:
 
 class OpRipemd160 : public OpCrypto {
 public:
+	static uint8_t TAG;
 	OpRipemd160 (): OpCrypto(0x03, "ripemd160"){}
 
 	int length() override {

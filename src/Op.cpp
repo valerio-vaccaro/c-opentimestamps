@@ -1,6 +1,8 @@
 
 #include "Op.h"
 
+namespace ots{
+
 Op* Op::deserialize(Deserialize *ctx){
 	uint8_t tag = ctx->read8();
 	return Op::deserializeFromTag(ctx, tag);
@@ -25,3 +27,5 @@ Op* Op::deserializeFromTag(Deserialize *ctx, uint8_t tag){
 	}
 	return nullptr;
 }
+
+} // namespace ots

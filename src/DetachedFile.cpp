@@ -1,5 +1,7 @@
 #include "DetachedFile.h"
 
+namespace ots{
+
 const uint8_t DetachedFile::HEADER_MAGIC[31] = {(uint8_t) 0x00, (uint8_t) 0x4f, (uint8_t) 0x70, (uint8_t) 0x65, (uint8_t) 0x6e,
 								  (uint8_t) 0x54, (uint8_t) 0x69, (uint8_t) 0x6d, (uint8_t) 0x65, (uint8_t) 0x73,
 								  (uint8_t) 0x74, (uint8_t) 0x61, (uint8_t) 0x6d, (uint8_t) 0x70, (uint8_t) 0x73, (uint8_t) 0x00, (uint8_t) 0x00,
@@ -29,3 +31,5 @@ DetachedFile* DetachedFile::deserialize(Deserialize *ctx) {
 	ctx->assertEof();
 	return new DetachedFile(fileHashOp, timestamp);
 }
+
+} // namespace ots

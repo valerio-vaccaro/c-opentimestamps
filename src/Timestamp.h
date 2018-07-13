@@ -9,6 +9,8 @@
 #include "Op.h"
 #include "Attestation.h"
 
+namespace ots{
+
 class Timestamp {
 public:
 	const uint8_t *msg;
@@ -66,5 +68,7 @@ inline std::ostream& operator<<(std::ostream& out, const Timestamp &timestamp) {
 	}
 	return out;
 }
+
+} // namespace ots
 
 #endif //C_OPENTIMESTAMPS_TIMESTAMP_H

@@ -12,6 +12,8 @@
 #include "Common.h"
 #include "Context.h"
 
+namespace ots{
+
 class Op {
 protected:
 	static const int32_t MAX_MESSAGE_LENGHT = 4096;
@@ -163,7 +165,6 @@ public:
 	}
 };
 
-
-
+} // namespace ots
 
 #endif //C_OPENTIMESTAMPS_OP_H

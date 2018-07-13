@@ -10,6 +10,8 @@
 #include <fstream>
 #include "Common.h"
 
+namespace ots{
+
 struct membuf : std::streambuf
 {
 	membuf(char* begin, char* end) {
@@ -143,5 +145,7 @@ public:
 inline std::ostream& operator<<(std::ostream& out, Serialize* serialize) {
 	return out;
 }
+
+} // namespace ots
 
 #endif //C_OPENTIMESTAMPS_SERIALIZE_H

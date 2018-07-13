@@ -1,5 +1,7 @@
 #include "Common.h"
 
+namespace ots{
+
 std::string toHex(const uint8_t *data, const int len);
 std::string toHex(const uint8_t data);
 char* toBytes(const std::string& hex);
@@ -62,3 +64,5 @@ int bytes(std::string &data, uint8_t* bytes){
 	return sizeof(bytes);
 }
 */
+
+} // namespace ots

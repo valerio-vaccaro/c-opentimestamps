@@ -8,6 +8,8 @@
 #include "Op.h"
 #include "Common.h"
 
+namespace ots{
+
 class DetachedFile {
 protected:
 	OpCrypto *fileHashOp;
@@ -51,5 +53,7 @@ inline std::ostream& operator<<(std::ostream& out, const DetachedFile &detached)
 		*detached.getTimestamp() << std::endl;
 	return out;
 }
+
+} // namespace ots
 
 #endif //C_OPENTIMESTAMPS_DETACHEDFILE_H

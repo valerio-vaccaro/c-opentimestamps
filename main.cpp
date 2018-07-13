@@ -11,20 +11,20 @@ int main() {
 	std::cout << ots << std::endl;
 
 	// DESERIALIZE
-	char *otsBytes = toBytes(ots);
+	char *otsBytes = ots::toBytes(ots);
 	size_t len = ots.length()/2;
-	membuf sbuf(otsBytes, otsBytes+len);
+	ots::membuf sbuf(otsBytes, otsBytes+len);
 	std::istream in(&sbuf);
-	Deserialize ctx(&in);
-	DetachedFile *detachedFile = DetachedFile::deserialize(&ctx);
+	ots::Deserialize ctx(&in);
+	ots::DetachedFile *detachedFile = ots::DetachedFile::deserialize(&ctx);
 	std::cout << *detachedFile << std::endl;
 
 	// SERIALIZE
 	std::ostringstream out;
-	Serialize serialize(&out);
+	ots::Serialize serialize(&out);
 	detachedFile->serialize(&serialize);
 	uint8_t* output = (uint8_t*) out.str().data();
-	std::cout << toHex(output, serialize.len) << std::endl;
+	std::cout << ots::toHex(output, serialize.len) << std::endl;
 
 
 	return 0;

@@ -9,6 +9,8 @@
 #include <sstream>
 #include "Context.h"
 
+namespace ots{
+
 class TimeAttestation {
 protected:
 	static const int TAG_SIZE = 8;
@@ -85,5 +87,7 @@ inline std::ostream& operator<<(std::ostream& out, BitcoinBlockHeaderAttestation
 	out <<  "BitcoinBlockHeaderAttestation("  << attestation->getHeight() <<  + ")";
 	return out;
 }
+
+} // namespace ots
 
 #endif //C_OPENTIMESTAMPS_ATTESTATION_H

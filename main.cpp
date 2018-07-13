@@ -3,6 +3,7 @@
 #include "src/Op.h"
 #include "src/Timestamp.h"
 #include "src/DetachedFile.h"
+#include "src/Common.h"
 
 int main() {
 
@@ -20,12 +21,9 @@ int main() {
 	std::cout << *detachedFile << std::endl;
 
 	// SERIALIZE
-	std::ostringstream out;
-	ots::Serialize serialize(&out);
+	ots::Serialize serialize;
 	detachedFile->serialize(&serialize);
-	uint8_t* output = (uint8_t*) out.str().data();
-	std::cout << ots::toHex(output, serialize.len) << std::endl;
-
+	std::cout << &serialize << std::endl;
 
 	return 0;
 }

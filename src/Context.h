@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "Common.h"
 
 namespace ots{
@@ -89,30 +90,28 @@ public:
 class Serialize {
 private:
 public:
-	std::ostream *stream;
+	std::vector<uint8_t> data;
 	int len;
-	Serialize(std::ostream *stream) : stream(stream), len(0) {}
+	Serialize() : len(0) {}
 	~Serialize() {}
 
-	std::ostream* getStream(){
-		return stream;
-	}
-
 	void write(const uint8_t *buffer, const size_t len) {
-		stream->write((char *) buffer, len);
 		this->len+=len;
+		for(uint8_t i=0;i<len;i++) {
+			data.push_back(buffer[i]);
+		}
 	}
 
 	void write8(const uint8_t obj) {
-		stream->write((char *) &obj, 1);
 		this->len++;
+		data.push_back(obj);
 	}
 
 	void write32(const uint32_t obj) {
 		uint8_t d[4] = {0};
 		for (int i=0; i<4 ;++i)
 			d[i] = ((uint8_t*)&obj)[3-i];
-		stream->write((char *) d, 4);
+		write(d, 4);
 		this->len++;
 	}
 
@@ -143,6 +142,9 @@ public:
 };
 
 inline std::ostream& operator<<(std::ostream& out, Serialize* serialize) {
+	for(uint8_t i=0;i<serialize->len;i++) {
+		out << ots::toHex(serialize->data[i]);
+	}
 	return out;
 }
 

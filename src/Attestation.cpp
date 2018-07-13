@@ -8,16 +8,10 @@ const uint8_t BitcoinBlockHeaderAttestation::TAG[TimeAttestation::TAG_SIZE] = {(
 
 
 void TimeAttestation::serialize(Serialize *ctx) const {
-	std::ostringstream buf;
-	Serialize payload_ctx(&buf);
-	payload_ctx.stream = &buf;
+	Serialize payload_ctx;
 	this->serialize_payload(&payload_ctx);
 
-	uint8_t* payload = (uint8_t*)buf.str().data();
-	uint8_t *buffer = new uint8_t [payload_ctx.len];
-	for (int i = 0;i<payload_ctx.len;i++){
-		buffer[i]=payload[i];
-	}
+	uint8_t* payload = (uint8_t* )payload_ctx.data.data();
 
 	if (const PendingAttestation* pending = dynamic_cast<const PendingAttestation *>(this)) {
 		ctx->write(pending->TAG,pending->TAG_SIZE);
@@ -25,7 +19,7 @@ void TimeAttestation::serialize(Serialize *ctx) const {
 		ctx->write(bitcoin->TAG,bitcoin->TAG_SIZE);
 	}
 	ctx->writeVaruint(payload_ctx.len);
-	ctx->write(buffer, payload_ctx.len);
+	ctx->write(payload, payload_ctx.len);
 }
 bool TimeAttestation::operator==(TimeAttestation& other){
 	if (PendingAttestation* pending = dynamic_cast<PendingAttestation *>(&other)) {

@@ -97,9 +97,7 @@ public:
 
 	void write(const uint8_t *buffer, const size_t len) {
 		this->len+=len;
-		for(uint8_t i=0;i<len;i++) {
-			data.push_back(buffer[i]);
-		}
+		std::copy (buffer, buffer + len, back_inserter(this->data));
 	}
 
 	void write8(const uint8_t obj) {

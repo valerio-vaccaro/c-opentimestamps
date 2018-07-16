@@ -49,7 +49,7 @@ public:
 
 	bool operator==(TimeAttestation& other) override {
 		PendingAttestation *ptr = dynamic_cast<PendingAttestation *>(&other);
-		return strncmp((char*)this->uri,(char*)ptr->uri,this->len);
+		return compare(this->uri,this->len,ptr->uri,this->len);
 	}
 	void serialize_payload(Serialize *ctx) const override;
 	static PendingAttestation* deserialize(Deserialize *ctx);

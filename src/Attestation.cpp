@@ -44,7 +44,7 @@ TimeAttestation* TimeAttestation::deserialize(Deserialize *ctx){
 	uint8_t serializedAttestation[MAX_PAYLOAD_SIZE];
 	uint32_t len = ctx->readVaruints(serializedAttestation, MAX_PAYLOAD_SIZE);
 
-	std::istringstream in((char*)serializedAttestation,len);
+	std::istringstream in((char*)serializedAttestation);
 	Deserialize payloadCtx(&in);
 	if (compare(tag,TAG_SIZE,PendingAttestation::TAG,TAG_SIZE)){
 		attestation = PendingAttestation::deserialize(&payloadCtx);

@@ -9,6 +9,9 @@ namespace ots{
 	uint8_t OpSha256::TAG=0x08;
 	uint8_t OpRipemd160::TAG=0x03;
 
+	const int32_t MAX_MESSAGE_LENGHT = 4096;
+	const int32_t Op::MAX_RESULT_LENGTH = 4096;
+
 Op* Op::deserialize(Deserialize *ctx){
 	uint8_t tag = ctx->read8();
 	return Op::deserializeFromTag(ctx, tag);
@@ -22,11 +25,11 @@ Op* Op::deserializeFromTag(Deserialize *ctx, uint8_t tag){
 	} else if (tag == OpRipemd160::TAG) {
 		return new OpRipemd160();
 	} else if (tag == OpAppend::TAG) {
-		uint8_t arg[MAX_RESULT_LENGTH];
+		uint8_t arg[Op::MAX_RESULT_LENGTH];
 		uint32_t len = ctx->readVaruints(arg, Op::MAX_RESULT_LENGTH);
 		return new OpAppend(arg,len);
 	} else if (tag == OpPrepend::TAG) {
-		uint8_t arg[MAX_RESULT_LENGTH];
+		uint8_t arg[Op::MAX_RESULT_LENGTH];
 		uint32_t len = ctx->readVaruints(arg, Op::MAX_RESULT_LENGTH);
 		return new OpPrepend(arg,len);
 	}

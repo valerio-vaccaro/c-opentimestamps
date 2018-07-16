@@ -16,11 +16,11 @@ namespace ots{
 
 class Op {
 protected:
-	static const int32_t MAX_MESSAGE_LENGHT = 4096;
+	static const int32_t MAX_MESSAGE_LENGHT;
 	const uint8_t TAG;
 	const std::string TAG_NAME;
 public:
-	static const int32_t MAX_RESULT_LENGTH = 4096;
+	static const int32_t MAX_RESULT_LENGTH;
 	Op(const uint8_t tag, const std::string &tag_name):
 	TAG(tag),
 	TAG_NAME(tag_name)

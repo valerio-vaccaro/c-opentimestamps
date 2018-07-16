@@ -2,19 +2,18 @@
 
 namespace ots{
 
-std::string toHex(const uint8_t *data, const int len);
-std::string toHex(const uint8_t data);
+std::string toHex(const unsigned char *data, const size_t len);
+std::string toHex(const unsigned char data);
 char* toBytes(const std::string& hex);
-bool compare(const uint8_t *a, const uint32_t a_len, const uint8_t *b, const uint32_t b_len);
+bool compare(const unsigned char *a, const size_t a_len, const unsigned char *b, const size_t b_len);
 
-
-std::string toHex(const uint8_t data)
+std::string toHex(const unsigned char data)
 {
 	std::stringstream ss;
 	ss<<std::hex << std::setw(2) << std::setfill('0') << (int)data;
 	return ss.str();
 }
-std::string toHex(const uint8_t *data, const int len)
+std::string toHex(const unsigned char *data, const size_t len)
 {
 	std::stringstream ss;
 	ss<<std::hex;
@@ -26,7 +25,7 @@ std::string toHex(const uint8_t *data, const int len)
 char* toBytes(const std::string& hex){
 	//std::vector<char> bytes;
 	size_t size = hex.size();
-	char *bytes = new char [sizeof(uint8_t) * ((size/2)+1)];
+	char *bytes = new char [sizeof(unsigned char) * ((size/2)+1)];
 	int j=0;
 	for (unsigned int i = 0; i < hex.length(); i += 2){
 		std::string byteString = hex.substr(i, 2);
@@ -39,7 +38,7 @@ char* toBytes(const std::string& hex){
 	return bytes;
 }
 
-bool compare(const uint8_t *a, const uint32_t a_len, const uint8_t *b, const uint32_t b_len){
+bool compare(const unsigned char *a, const size_t a_len, const unsigned char *b, const size_t b_len){
 	if (a_len != b_len){
 		return false;
 	}

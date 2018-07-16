@@ -15,17 +15,17 @@ protected:
 	OpCrypto *fileHashOp;
 	Timestamp *timestamp;
 public:
-	static const uint8_t MAJOR_VERSION;
-	static const uint8_t HEADER_MAGIC[31];
+	static const unsigned char MAJOR_VERSION;
+	static const unsigned char HEADER_MAGIC[31];
 
 	DetachedFile(OpCrypto *fileHashOp, Timestamp *timestamp){
 		this->fileHashOp = fileHashOp;
 		this->timestamp = timestamp;
 	}
 
-	DetachedFile(OpCrypto* fileHashOp, const uint8_t* msg, const uint32_t len){
+	DetachedFile(OpCrypto* fileHashOp, const unsigned char* msg, const size_t len){
 		this->fileHashOp = fileHashOp;
-		uint8_t hash[this->fileHashOp->length()];
+		unsigned char hash[this->fileHashOp->length()];
 		this->fileHashOp->call(msg, len, hash);
 		this->timestamp = new Timestamp(hash, this->fileHashOp->length());
 	}
@@ -33,7 +33,7 @@ public:
 	OpCrypto * getFileHashOp() const {
 		return this->fileHashOp;
 	}
-	const uint8_t* fileDigest() const {
+	const unsigned char* fileDigest() const {
 		return this->timestamp->getDigest();
 	}
 	uint32_t fileDigestLenght() const {

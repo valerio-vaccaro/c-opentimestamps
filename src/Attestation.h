@@ -15,9 +15,9 @@ class TimeAttestation {
 protected:
 	static const int TAG_SIZE = 8;
 	static const int  MAX_PAYLOAD_SIZE = 8192;
-	const uint8_t *TAG;
+	const unsigned char *TAG;
 public:
-	TimeAttestation(const uint8_t *tag) : TAG(tag){}
+	TimeAttestation(const unsigned char *tag) : TAG(tag){}
 	virtual bool operator==(TimeAttestation& other);
 	virtual void serialize_payload(Serialize *ctx) const = 0;
 	void serialize(Serialize *ctx) const;
@@ -26,23 +26,23 @@ public:
 
 class PendingAttestation : public TimeAttestation{
 private:
-	uint8_t *uri;
-	uint8_t len;
-	static const uint32_t MAX_URI_LENGTH = 1000;
+	unsigned char *uri;
+	size_t len;
+	static const size_t MAX_URI_LENGTH = 1000;
 public:
-	static const uint8_t TAG[TimeAttestation::TAG_SIZE];
-	PendingAttestation(uint8_t* msg, uint32_t len): TimeAttestation(TAG){
+	static const unsigned char TAG[TimeAttestation::TAG_SIZE];
+	PendingAttestation(unsigned char* msg, unsigned char len): TimeAttestation(TAG){
 		this->len = len;
-		this->uri = new uint8_t [len];
+		this->uri = new unsigned char [len];
 		std::copy(msg, msg + len, this->uri);
 	}
-	uint8_t * getUri() {
+	unsigned char * getUri() {
 		return this->uri;
 	}
-	uint8_t getUriLen() {
+	unsigned char getUriLen() {
 		return this->len;
 	}
-	static bool checkUri(uint8_t* uri, uint32_t len){
+	static bool checkUri(unsigned char* uri, size_t len){
 		// TODO
 		return true;
 	}
@@ -60,7 +60,7 @@ class BitcoinBlockHeaderAttestation : public TimeAttestation{
 private:
 	uint32_t height;
 public:
-	static const uint8_t TAG[TimeAttestation::TAG_SIZE];
+	static const unsigned char TAG[TimeAttestation::TAG_SIZE];
 
 	BitcoinBlockHeaderAttestation(uint32_t height): TimeAttestation(TAG){
 		this->height = height;

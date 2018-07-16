@@ -28,17 +28,12 @@ public:
 	Deserialize(std::istream* stream) : stream(stream) {}
 	~Deserialize() {}
 
-	uint8_t read8(){
-		uint8_t obj;
+	unsigned char read8(){
+		unsigned char obj;
 		stream->read((char*)&obj, 1);
 		return obj;
 	}
-	uint32_t read32(){
-		uint32_t obj;
-		stream->read((char*)&obj, 1);
-		return obj;
-	}
-	void read(uint8_t* buffer, size_t len){
+	void read(unsigned char* buffer, size_t len){
 		//stream->read((char*)&buffer, len);
 		std::size_t n = 0;
 		while( len > 0 && stream->good() ) {
@@ -49,10 +44,10 @@ public:
 		}
 	}
 
-	uint32_t readVaruint() {
-		uint32_t value = 0;
-		uint8_t shift = 0;
-		uint8_t b;
+	size_t readVaruint() {
+		size_t value = 0;
+		unsigned char shift = 0;
+		unsigned char b;
 		do {
 			b = read8();
 			value |= (b & 0b01111111) << shift;
@@ -62,8 +57,8 @@ public:
 		return value;
 	}
 
-	uint8_t readVaruints(uint8_t* buffer, const size_t len){
-		uint32_t bufferLen = readVaruint();
+	unsigned char readVaruints(unsigned char* buffer, const size_t len){
+		size_t bufferLen = readVaruint();
 		if ((bufferLen & 0xff) > len) {
 			return 0;
 		}
@@ -71,8 +66,8 @@ public:
 		return bufferLen;
 	}
 
-	bool assertMagic(const uint8_t* expectedMagic, const uint32_t len) {
-		uint8_t buffer[len];
+	bool assertMagic(const unsigned char* expectedMagic, const size_t len) {
+		unsigned char buffer[len];
 		read(buffer, len);
 		if (compare(expectedMagic, len, buffer, len)) {
 			return true;
@@ -90,36 +85,36 @@ public:
 class Serialize {
 private:
 public:
-	std::vector<uint8_t> data;
+	std::vector<unsigned char> data;
 	int len;
 	Serialize() : len(0) {}
 	~Serialize() {}
 
-	void write(const uint8_t *buffer, const size_t len) {
+	void write(const unsigned char *buffer, const size_t len) {
 		this->len+=len;
 		std::copy (buffer, buffer + len, std::back_inserter(this->data));
 	}
 
-	void write8(const uint8_t obj) {
+	void write8(const unsigned char obj) {
 		this->len++;
 		data.push_back(obj);
 	}
 
 	void write32(const uint32_t obj) {
-		uint8_t d[4] = {0};
+		unsigned char d[4];
 		for (int i=0; i<4 ;++i)
-			d[i] = ((uint8_t*)&obj)[3-i];
+			d[i] = ((unsigned char*)&obj)[3-i];
 		write(d, 4);
 		this->len++;
 	}
 
-	void writeVaruint(const uint32_t value) {
-		uint32_t val = value;
+	void writeVaruint(const size_t value) {
+		size_t val = value;
 		if ((val) == 0b00000000) {
 			write8(0x00);
 		} else {
 			while (val != 0) {
-				uint8_t b = (uint8_t) ((val&0xff) & 0b01111111);
+				unsigned char b = (unsigned char) ((val&0xff) & 0b01111111);
 				if ((val) > 0b01111111) {
 					b |= 0b10000000;
 				}
@@ -132,7 +127,7 @@ public:
 		}
 	}
 
-	void writeVaruints(const uint8_t *buffer, const size_t len) {
+	void writeVaruints(const unsigned char *buffer, const size_t len) {
 		writeVaruint(len);
 		write(buffer, len);
 	}
@@ -140,7 +135,7 @@ public:
 };
 
 inline std::ostream& operator<<(std::ostream& out, Serialize* serialize) {
-	for(uint8_t i=0;i<serialize->len;i++) {
+	for(int i=0;i<serialize->len;i++) {
 		out << ots::toHex(serialize->data[i]);
 	}
 	return out;

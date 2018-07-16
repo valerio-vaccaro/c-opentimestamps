@@ -31,8 +31,8 @@ public:
 	}
 
 	void merge(Timestamp *other);
-	bool isTimestampComplete();
-	bool equals(Timestamp timestamp);
+	//TODO: bool isTimestampComplete();
+	//TODO: bool equals(Timestamp timestamp);
 	Timestamp* add(Op *op);
 
 	static void do_tag_or_attestation(Timestamp* timestamp, Deserialize *ctx, uint8_t tag);

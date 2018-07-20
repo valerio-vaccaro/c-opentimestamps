@@ -24,7 +24,7 @@ int main() {
 	// SERIALIZE
 	ots::Serialize serialize;
 	detachedFile->serialize(&serialize);
-	std::cout << &serialize << std::endl;
+	std::cout << serialize << std::endl;
 
 	return 0;
 }

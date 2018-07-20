@@ -13,7 +13,7 @@ int main() {
 
 	// DESERIALIZE
 	unsigned char *otsBytes = ots::toBytes(ots);
-	size_t len = ots.length()/2;
+	const size_t len = ots.length()/2;
 	std::vector<unsigned char> buffer(otsBytes,otsBytes+len);
 	ots::Deserialize ctx(buffer);
 	ots::DetachedFile *detachedFile = ots::DetachedFile::deserialize(&ctx);

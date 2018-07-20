@@ -13,35 +13,27 @@
 
 namespace ots{
 
-struct membuf : std::streambuf
-{
-	membuf(char* begin, char* end) {
-		this->setg(begin, begin, end);
-	}
-};
-
 class Deserialize
 {
 private:
 public:
-	std::istream* stream;
-	Deserialize(std::istream* stream) : stream(stream) {}
+	std::vector<unsigned char> data;
+	Deserialize(std::vector<unsigned char> data) : data(data) {}
 	~Deserialize() {}
 
 	unsigned char read8(){
-		unsigned char obj;
-		stream->read((char*)&obj, 1);
-		return obj;
+		unsigned char first = data.front();
+		data.erase(data.begin());
+		return first;
+
 	}
 	void read(unsigned char* buffer, size_t len){
-		//stream->read((char*)&buffer, len);
-		std::size_t n = 0;
-		while( len > 0 && stream->good() ) {
-			stream->read(reinterpret_cast<char *>(&buffer[n]), len );
-			int i = stream->gcount();
-			n += i;
-			len -= i;
+		size_t length = len;
+		if(this->data.size() < len){
+			length = this->data.size();
 		}
+		std::copy_n(this->data.begin(), length, buffer);
+		this->data.erase (this->data.begin(),this->data.begin()+length);
 	}
 
 	size_t readVaruint() {
@@ -77,7 +69,7 @@ public:
 	}
 
 	bool assertEof(){
-		return stream->eof();
+		return data.size()==0;
 	}
 };
 

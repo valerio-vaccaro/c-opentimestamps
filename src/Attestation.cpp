@@ -44,8 +44,8 @@ TimeAttestation* TimeAttestation::deserialize(Deserialize *ctx){
 	unsigned char serializedAttestation[MAX_PAYLOAD_SIZE];
 	size_t len = ctx->readVaruints(serializedAttestation, MAX_PAYLOAD_SIZE);
 
-	std::istringstream in((char*)serializedAttestation);
-	Deserialize payloadCtx(&in);
+	std::vector<unsigned char> vector(serializedAttestation,serializedAttestation+len);
+	Deserialize payloadCtx(vector);
 	if (compare(tag,TAG_SIZE,PendingAttestation::TAG,TAG_SIZE)){
 		attestation = PendingAttestation::deserialize(&payloadCtx);
 	} else if (compare(tag,TAG_SIZE,BitcoinBlockHeaderAttestation::TAG,TAG_SIZE)) {

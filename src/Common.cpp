@@ -4,7 +4,7 @@ namespace ots{
 
 std::string toHex(const unsigned char *data, const size_t len);
 std::string byteToHex(const unsigned char data);
-char* toBytes(const std::string& hex);
+unsigned char* toBytes(const std::string& hex);
 bool compare(const unsigned char *a, const size_t a_len, const unsigned char *b, const size_t b_len);
 
 std::string byteToHex(const unsigned char data)
@@ -22,10 +22,10 @@ std::string toHex(const unsigned char *data, const size_t len)
 	return ss.str();
 }
 
-char* toBytes(const std::string& hex){
+unsigned char* toBytes(const std::string& hex){
 	//std::vector<char> bytes;
 	size_t size = hex.size();
-	char *bytes = new char [sizeof(unsigned char) * ((size/2)+1)];
+	unsigned char *bytes = new unsigned char [sizeof(unsigned char) * ((size/2)+1)];
 	int j=0;
 	for (unsigned int i = 0; i < hex.length(); i += 2){
 		std::string byteString = hex.substr(i, 2);

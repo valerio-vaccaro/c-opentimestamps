@@ -12,11 +12,10 @@ int main() {
 	std::cout << ots << std::endl;
 
 	// DESERIALIZE
-	char *otsBytes = ots::toBytes(ots);
+	unsigned char *otsBytes = ots::toBytes(ots);
 	size_t len = ots.length()/2;
-	ots::membuf sbuf(otsBytes, otsBytes+len);
-	std::istream in(&sbuf);
-	ots::Deserialize ctx(&in);
+	std::vector<unsigned char> buffer(otsBytes,otsBytes+len);
+	ots::Deserialize ctx(buffer);
 	ots::DetachedFile *detachedFile = ots::DetachedFile::deserialize(&ctx);
 	std::cout << *detachedFile << std::endl;
 

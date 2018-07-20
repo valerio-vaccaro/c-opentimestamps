@@ -1,7 +1,8 @@
 # c-opentimestamps
 C/C++ implementation of OpenTimestamps
 
-#### Compile
+#### Compile Lib
+Build `libc_opentimestamps` shared library and `main` sample binary.
 ```bash
 mkdir build
 cd build
@@ -9,9 +10,12 @@ cmake ../
 make
 ```
 
-#### Run
+#### Import and Run
+The sample `main.cpp` imports and uses shared library.
+To compile successfully follow:
 ```bash
-./c_opentimestamps
+g++ main.cpp -o main -L./build/ -lc_opentimestamps
+./main
 ```
 
 #### Problems Compiling

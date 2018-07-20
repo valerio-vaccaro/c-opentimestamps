@@ -3,11 +3,11 @@
 namespace ots{
 
 std::string toHex(const unsigned char *data, const size_t len);
-std::string toHex(const unsigned char data);
+std::string byteToHex(const unsigned char data);
 char* toBytes(const std::string& hex);
 bool compare(const unsigned char *a, const size_t a_len, const unsigned char *b, const size_t b_len);
 
-std::string toHex(const unsigned char data)
+std::string byteToHex(const unsigned char data)
 {
 	std::stringstream ss;
 	ss<<std::hex << std::setw(2) << std::setfill('0') << (int)data;

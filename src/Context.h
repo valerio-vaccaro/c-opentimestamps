@@ -136,7 +136,7 @@ public:
 
 inline std::ostream& operator<<(std::ostream& out, Serialize* serialize) {
 	for(int i=0;i<serialize->len;i++) {
-		out << ots::toHex(serialize->data[i]);
+		out << ots::byteToHex(serialize->data[i]);
 	}
 	return out;
 }

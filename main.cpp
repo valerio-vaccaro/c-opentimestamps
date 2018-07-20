@@ -12,7 +12,9 @@ int main() {
 	std::cout << ots << std::endl;
 
 	// DESERIALIZE
-	unsigned char *otsBytes = ots::toBytes(ots);
+	unsigned char otsBytes [ots.length()/2];
+	ots::toBytes(ots, otsBytes);
+
 	const size_t len = ots.length()/2;
 	std::vector<unsigned char> buffer(otsBytes,otsBytes+len);
 	ots::Deserialize ctx(buffer);

@@ -45,9 +45,9 @@ inline std::ostream& operator<<(std::ostream& out, const Timestamp &timestamp) {
 	if (!timestamp.attestations.empty()) {
 		for (const auto &attestation: timestamp.attestations){
 			if (PendingAttestation* pending = dynamic_cast<PendingAttestation *>(attestation)) {
-				out << pending;
+				out << *pending;
 			}else if (BitcoinBlockHeaderAttestation* bitcoin = dynamic_cast<BitcoinBlockHeaderAttestation *>(attestation)) {
-				out << bitcoin;
+				out << *bitcoin;
 			}
 		}
 	}

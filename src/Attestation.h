@@ -36,10 +36,10 @@ public:
 		this->uri = new unsigned char [len];
 		std::copy(msg, msg + len, this->uri);
 	}
-	unsigned char * getUri() {
+	unsigned char * getUri() const {
 		return this->uri;
 	}
-	unsigned char getUriLen() {
+	unsigned char getUriLen() const {
 		return this->len;
 	}
 	static bool checkUri(unsigned char* uri, size_t len){
@@ -65,7 +65,7 @@ public:
 	BitcoinBlockHeaderAttestation(uint32_t height): TimeAttestation(TAG){
 		this->height = height;
 	}
-	uint32_t getHeight() {
+	uint32_t getHeight() const {
 		return this->height;
 	}
 	bool operator==(const BitcoinBlockHeaderAttestation& other) const {
@@ -76,15 +76,15 @@ public:
 	static BitcoinBlockHeaderAttestation* deserialize(Deserialize *ctx);
 };
 
-inline std::ostream& operator<<(std::ostream& out, PendingAttestation* attestation) {
+inline std::ostream& operator<<(std::ostream& out, const PendingAttestation &attestation) {
 	out <<  "PendingAttestation(";
-	out.write((char*) attestation->getUri(), attestation->getUriLen());
+	out.write((char*) attestation.getUri(), attestation.getUriLen());
 	out << ")";
 	return out;
 }
 
-inline std::ostream& operator<<(std::ostream& out, BitcoinBlockHeaderAttestation* attestation) {
-	out <<  "BitcoinBlockHeaderAttestation("  << attestation->getHeight() <<  + ")";
+inline std::ostream& operator<<(std::ostream& out, const BitcoinBlockHeaderAttestation &attestation) {
+	out <<  "BitcoinBlockHeaderAttestation("  << attestation.getHeight() <<  + ")";
 	return out;
 }
 

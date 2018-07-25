@@ -39,10 +39,10 @@ public:
 };
 
 class OpBinary : public Op {
-public:
+protected:
 	unsigned char *arg;
 	size_t len;
-
+public:
 	OpBinary(const unsigned char tag, const std::string &tag_name, unsigned char *arg, size_t len) :
 			Op(tag, tag_name),
 			arg(arg),
@@ -52,6 +52,15 @@ public:
 	void serialize(Serialize *ctx) override {
 		ctx->write8(this->tag());
 		ctx->writeVaruints(arg, len);
+	}
+
+	unsigned char *getArg () const{
+		assert (NULL != this->arg);
+		return this->arg;
+	}
+
+	size_t getLen () const{
+		return this->len;
 	}
 };
 
@@ -71,7 +80,7 @@ public:
 // Define operators
 
 inline std::ostream& operator<<(std::ostream& out, const OpBinary &op) {
-	out << op.tagName() << " " << toHex(op.arg, op.len) << "\n";
+	out << op.tagName() << " " << toHex(op.getArg (), op.getLen ()) << "\n";
 	return out;
 }
 

@@ -25,11 +25,11 @@ Op* Op::deserializeFromTag(Deserialize *ctx, unsigned char tag){
 	} else if (tag == OpRipemd160::TAG) {
 		return new OpRipemd160();
 	} else if (tag == OpAppend::TAG) {
-		unsigned char arg[Op::MAX_RESULT_LENGTH];
+		unsigned char * arg = new unsigned char [Op::MAX_RESULT_LENGTH];
 		size_t len = ctx->readVaruints(arg, Op::MAX_RESULT_LENGTH);
 		return new OpAppend(arg,len);
 	} else if (tag == OpPrepend::TAG) {
-		unsigned char arg[Op::MAX_RESULT_LENGTH];
+		unsigned char * arg = new unsigned char [Op::MAX_RESULT_LENGTH];
 		size_t len = ctx->readVaruints(arg, Op::MAX_RESULT_LENGTH);
 		return new OpPrepend(arg,len);
 	}

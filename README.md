@@ -33,6 +33,12 @@ you can specify the right path to OpenSSL in `OPENSSL_ROOT_DIR`; for example:
 cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl ../
 ```
 
+to debug:
+```
+cmake -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl -DCMAKE_BUILD_TYPE=Debug ../
+```
+
+
 #### Connect to Python
 Install `swig` to generate the wrapper code `ots.py`
 ```bash

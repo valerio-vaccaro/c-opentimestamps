@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <assert.h>
 
 namespace ots{
 extern std::string toHex(const unsigned char *data, const size_t len);

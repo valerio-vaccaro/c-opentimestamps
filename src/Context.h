@@ -17,9 +17,9 @@ namespace ots{
 class Deserialize
 {
 private:
+	std::vector<unsigned char> &data; // data life is owned by the caller
 public:
-	std::vector<unsigned char> data;
-	Deserialize(std::vector<unsigned char> data) : data(data) {}
+	Deserialize(std::vector<unsigned char> &data) : data(data) {}
 	~Deserialize() {}
 
 	unsigned char read8(){

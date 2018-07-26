@@ -18,22 +18,23 @@ Op* Op::deserialize(Deserialize *ctx){
 }
 
 Op* Op::deserializeFromTag(Deserialize *ctx, unsigned char tag){
+	Op * ret = nullptr;
 	if (tag == OpSha256::TAG) {
-		return new OpSha256();
+		ret = new OpSha256();
 	} else if (tag == OpSha1::TAG) {
-		return new OpSha1();
+		ret = new OpSha1();
 	} else if (tag == OpRipemd160::TAG) {
-		return new OpRipemd160();
+		ret = new OpRipemd160();
 	} else if (tag == OpAppend::TAG) {
 		unsigned char * arg = new unsigned char [Op::MAX_RESULT_LENGTH];
 		size_t len = ctx->readVaruints(arg, Op::MAX_RESULT_LENGTH);
-		return new OpAppend(arg,len);
+		ret = new OpAppend(arg,len);
 	} else if (tag == OpPrepend::TAG) {
 		unsigned char * arg = new unsigned char [Op::MAX_RESULT_LENGTH];
 		size_t len = ctx->readVaruints(arg, Op::MAX_RESULT_LENGTH);
-		return new OpPrepend(arg,len);
+		ret = new OpPrepend(arg,len);
 	}
-	return nullptr;
+	return ret;
 }
 
 } // namespace ots

@@ -22,8 +22,25 @@ public:
 	msg(msg),
 	len(len){
 	}
+	
+	virtual ~Timestamp (){
+		for_each (this->attestations.begin (), this->attestations.end (), [](TimeAttestation* el){
+			assert (nullptr != el);
+			delete el;
+		});
+		for_each (this->ops.begin (), this->ops.end (), [](std::pair <Op*, Timestamp*> el){
+			assert (nullptr != el.first);
+			assert (nullptr != el.second);
+			delete el.first;
+			delete el.second;
+		});
+
+		assert (nullptr != msg);
+		delete [] msg;
+	}
 
 	const unsigned char* getDigest() const{
+		assert (nullptr != this->msg);
 		return this->msg;
 	}
 	size_t getDigestLenght(){

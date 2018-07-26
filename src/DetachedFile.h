@@ -22,6 +22,12 @@ public:
 	fileHashOp (fileHashOp),
 	timestamp (timestamp){
 	}
+
+	virtual ~DetachedFile (){
+		assert (nullptr != this->timestamp);
+		delete this->timestamp;
+	}
+
 /*
 	DetachedFile(OpCrypto* fileHashOp, const unsigned char* msg, const size_t len){
 		this->fileHashOp = fileHashOp;

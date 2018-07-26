@@ -18,14 +18,13 @@ int main() {
 	const size_t len = ots.length()/2;
 	std::vector<unsigned char> buffer(otsBytes,otsBytes+len);
 	ots::Deserialize ctx(buffer);
-	ots::DetachedFile *detachedFile = ots::DetachedFile::deserialize(&ctx);
-	std::cout << *detachedFile << std::endl;
+	std::unique_ptr <ots::DetachedFile> uniqueDetachedFile (ots::DetachedFile::deserialize(&ctx));
+	std::cout << *uniqueDetachedFile << std::endl;
 
 	// SERIALIZE
 	ots::Serialize serialize;
-	detachedFile->serialize(&serialize);
+	uniqueDetachedFile->serialize(&serialize);
 	std::cout << serialize << std::endl;
-
 	return 0;
 }
 

@@ -24,10 +24,10 @@ std::string toHex(const unsigned char *data, const size_t len)
 }
 
 void toBytes(const std::string& hex, unsigned char * bytes){
-	assert (NULL != bytes);
+	assert (nullptr != bytes);
 	for (unsigned int i = 0; i < hex.length(); i += 2){
 		const std::string byteString = hex.substr(i, 2);
-		bytes[i/2] = strtol(byteString.c_str(), NULL, 16);
+		bytes[i/2] = strtol(byteString.c_str(), nullptr, 16);
 	}
 }
 

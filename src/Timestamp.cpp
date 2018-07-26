@@ -19,8 +19,8 @@ void Timestamp::do_tag_or_attestation(Timestamp *timestamp, Deserialize *ctx, un
 }
 
 Timestamp* Timestamp::deserialize(Deserialize *ctx, unsigned char *initialMsg, size_t len ){
-	assert (NULL != ctx);
-	assert (NULL != initialMsg);
+	assert (nullptr != ctx);
+	assert (nullptr != initialMsg);
 	assert (len > 0);
 
 	Timestamp *timestamp = new Timestamp(initialMsg, len);

@@ -24,7 +24,7 @@ public:
 	}
 
 	virtual ~DetachedFile (){
-		assert (NULL != this->timestamp);
+		assert (nullptr != this->timestamp);
 		delete this->timestamp;
 	}
 

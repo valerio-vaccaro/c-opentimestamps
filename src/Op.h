@@ -51,7 +51,7 @@ public:
 	}
 
 	virtual ~OpBinary (){
-		assert (NULL != this->arg);
+		assert (nullptr != this->arg);
 		delete [] this->arg;
 	}
 	void serialize(Serialize *ctx) override {
@@ -60,7 +60,7 @@ public:
 	}
 
 	unsigned char *getArg () const{
-		assert (NULL != this->arg);
+		assert (nullptr != this->arg);
 		return this->arg;
 	}
 

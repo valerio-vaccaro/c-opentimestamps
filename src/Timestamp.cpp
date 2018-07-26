@@ -10,7 +10,7 @@ void Timestamp::do_tag_or_attestation(Timestamp *timestamp, Deserialize *ctx, un
 	} else {
 		Op *op = Op::deserializeFromTag(ctx, tag);
 
-		unsigned char result[Op::MAX_RESULT_LENGTH];
+		unsigned char * result = new unsigned char [Op::MAX_RESULT_LENGTH];
 		size_t resultLen = op->call(timestamp->msg, timestamp->len, result);
 
 		Timestamp *stamp = Timestamp::deserialize(ctx, result, resultLen);
@@ -19,6 +19,10 @@ void Timestamp::do_tag_or_attestation(Timestamp *timestamp, Deserialize *ctx, un
 }
 
 Timestamp* Timestamp::deserialize(Deserialize *ctx, unsigned char *initialMsg, size_t len ){
+	assert (NULL != ctx);
+	assert (NULL != initialMsg);
+	assert (len > 0);
+
 	Timestamp *timestamp = new Timestamp(initialMsg, len);
 	unsigned char tag = ctx->read8();
 	while ( tag == 0xff ) {

@@ -18,6 +18,7 @@ protected:
 	const unsigned char *TAG;
 public:
 	TimeAttestation(const unsigned char *tag) : TAG(tag){}
+	virtual ~TimeAttestation(){}
 	virtual bool operator==(TimeAttestation& other);
 	virtual void serialize_payload(Serialize *ctx) const = 0;
 	void serialize(Serialize *ctx) const;

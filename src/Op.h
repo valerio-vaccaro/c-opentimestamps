@@ -25,6 +25,7 @@ public:
 	TAG(tag),
 	TAG_NAME(tag_name)
 	{};
+	virtual ~Op (){}
 	unsigned char tag() const{
 		return this->TAG;
 	}
@@ -49,6 +50,10 @@ public:
 			len(len) {
 	}
 
+	virtual ~OpBinary (){
+		assert (NULL != this->arg);
+		delete [] this->arg;
+	}
 	void serialize(Serialize *ctx) override {
 		ctx->write8(this->tag());
 		ctx->writeVaruints(arg, len);

@@ -18,18 +18,18 @@ public:
 	static const unsigned char MAJOR_VERSION;
 	static const unsigned char HEADER_MAGIC[31];
 
-	DetachedFile(OpCrypto *fileHashOp, Timestamp *timestamp){
-		this->fileHashOp = fileHashOp;
-		this->timestamp = timestamp;
+	DetachedFile(OpCrypto *fileHashOp, Timestamp *timestamp):
+	fileHashOp (fileHashOp),
+	timestamp (timestamp){
 	}
-
+/*
 	DetachedFile(OpCrypto* fileHashOp, const unsigned char* msg, const size_t len){
 		this->fileHashOp = fileHashOp;
 		unsigned char hash[this->fileHashOp->length()];
 		this->fileHashOp->call(msg, len, hash);
 		this->timestamp = new Timestamp(hash, this->fileHashOp->length());
 	}
-
+*/
 	OpCrypto * getFileHashOp() const {
 		return this->fileHashOp;
 	}

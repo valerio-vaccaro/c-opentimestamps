@@ -6,11 +6,10 @@
 #include <iomanip>
 
 namespace ots{
-
-extern std::string toHex(const uint8_t *data, const int len);
-extern std::string toHex(const uint8_t data);
-extern char* toBytes(const std::string& hex);
-extern bool compare(const uint8_t *a, const uint32_t a_len, const uint8_t *b, const uint32_t b_len);
+extern std::string toHex(const unsigned char *data, const size_t len);
+extern std::string byteToHex(const unsigned char data);
+extern void toBytes(const std::string& hex, unsigned char *bytes);
+extern bool compare(const unsigned char *a, const size_t a_len, const unsigned char *b, const size_t b_len);
 
 } // namespace ots
 

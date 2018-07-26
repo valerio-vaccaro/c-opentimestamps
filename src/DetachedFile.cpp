@@ -2,13 +2,13 @@
 
 namespace ots{
 
-const uint8_t DetachedFile::HEADER_MAGIC[31] = {(uint8_t) 0x00, (uint8_t) 0x4f, (uint8_t) 0x70, (uint8_t) 0x65, (uint8_t) 0x6e,
-								  (uint8_t) 0x54, (uint8_t) 0x69, (uint8_t) 0x6d, (uint8_t) 0x65, (uint8_t) 0x73,
-								  (uint8_t) 0x74, (uint8_t) 0x61, (uint8_t) 0x6d, (uint8_t) 0x70, (uint8_t) 0x73, (uint8_t) 0x00, (uint8_t) 0x00,
-								  (uint8_t) 0x50, (uint8_t) 0x72, (uint8_t) 0x6f, (uint8_t) 0x6f, (uint8_t) 0x66, (uint8_t) 0x00,
-								  (uint8_t) 0xbf, (uint8_t) 0x89, (uint8_t) 0xe2, (uint8_t) 0xe8, (uint8_t) 0x84, (uint8_t) 0xe8, (uint8_t) 0x92,
-								  (uint8_t) 0x94};
-const uint8_t DetachedFile::MAJOR_VERSION = 1;
+const unsigned char DetachedFile::HEADER_MAGIC[31] = {(unsigned char) 0x00, (unsigned char) 0x4f, (unsigned char) 0x70, (unsigned char) 0x65, (unsigned char) 0x6e,
+								  (unsigned char) 0x54, (unsigned char) 0x69, (unsigned char) 0x6d, (unsigned char) 0x65, (unsigned char) 0x73,
+								  (unsigned char) 0x74, (unsigned char) 0x61, (unsigned char) 0x6d, (unsigned char) 0x70, (unsigned char) 0x73, (unsigned char) 0x00, (unsigned char) 0x00,
+								  (unsigned char) 0x50, (unsigned char) 0x72, (unsigned char) 0x6f, (unsigned char) 0x6f, (unsigned char) 0x66, (unsigned char) 0x00,
+								  (unsigned char) 0xbf, (unsigned char) 0x89, (unsigned char) 0xe2, (unsigned char) 0xe8, (unsigned char) 0x84, (unsigned char) 0xe8, (unsigned char) 0x92,
+								  (unsigned char) 0x94};
+const unsigned char DetachedFile::MAJOR_VERSION = 1;
 
 void DetachedFile::serialize(Serialize *ctx){
 	ctx->write(HEADER_MAGIC, sizeof(HEADER_MAGIC));
@@ -20,12 +20,12 @@ void DetachedFile::serialize(Serialize *ctx){
 
 DetachedFile* DetachedFile::deserialize(Deserialize *ctx) {
 	ctx->assertMagic(HEADER_MAGIC, sizeof(HEADER_MAGIC));
-	uint8_t major = ctx->readVaruint();
+	unsigned char major = ctx->readVaruint();
 	if (major != MAJOR_VERSION) {
 		return nullptr;
 	}
 	OpCrypto *fileHashOp = (OpCrypto *) OpCrypto::deserialize(ctx);
-	uint8_t *fileHash = new uint8_t [fileHashOp->length()];
+	unsigned char *fileHash = new unsigned char [fileHashOp->length()];
 	ctx->read(fileHash, fileHashOp->length());
 	Timestamp *timestamp = Timestamp::deserialize(ctx, fileHash, fileHashOp->length());
 	ctx->assertEof();

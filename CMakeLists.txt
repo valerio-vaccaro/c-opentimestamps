@@ -12,5 +12,10 @@ endif()
 
 file(GLOB SOURCE_FILES "src/*.cpp")
 file(GLOB HEADER_FILES  "src/*.h")
-add_executable(c_opentimestamps main.cpp ${SOURCE_FILES} ${HEADER_FILES})
+add_library(${PROJECT_NAME} SHARED ${SOURCE_FILES} ${HEADER_FILES} )
 target_link_libraries(${PROJECT_NAME} OpenSSL::Crypto)
+
+# CMake instructions to test using the lib
+set( APP_EXE main )
+add_executable( ${APP_EXE} main.cpp)
+target_link_libraries(${APP_EXE} ${PROJECT_NAME} OpenSSL::Crypto)

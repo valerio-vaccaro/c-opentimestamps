@@ -3,24 +3,24 @@
 
 namespace ots{
 
-void Timestamp::do_tag_or_attestation(Timestamp *timestamp, Deserialize *ctx, uint8_t tag){
+void Timestamp::do_tag_or_attestation(Timestamp *timestamp, Deserialize *ctx, unsigned char tag){
 	if (tag == 0x00){
 		TimeAttestation *attestation = TimeAttestation::deserialize(ctx);
 		timestamp->attestations.push_back(attestation);
 	} else {
 		Op *op = Op::deserializeFromTag(ctx, tag);
 
-		uint8_t result[Op::MAX_RESULT_LENGTH];
-		uint8_t resultLen = op->call(timestamp->msg, timestamp->len, result);
+		unsigned char result[Op::MAX_RESULT_LENGTH];
+		size_t resultLen = op->call(timestamp->msg, timestamp->len, result);
 
 		Timestamp *stamp = Timestamp::deserialize(ctx, result, resultLen);
 		timestamp->ops.insert(std::pair <Op*, Timestamp*> (op, stamp));
 	}
 }
 
-Timestamp* Timestamp::deserialize(Deserialize *ctx, uint8_t *initialMsg, uint32_t len ){
+Timestamp* Timestamp::deserialize(Deserialize *ctx, unsigned char *initialMsg, size_t len ){
 	Timestamp *timestamp = new Timestamp(initialMsg, len);
-	uint8_t tag = ctx->read8();
+	unsigned char tag = ctx->read8();
 	while ( tag == 0xff ) {
 		do_tag_or_attestation(timestamp, ctx, ctx->read8());
 		tag = ctx->read8();
@@ -73,7 +73,7 @@ void Timestamp::serialize(Serialize *ctx) {
 		if (this->ops.count(op)>0) {
 			return this->ops.at(op);
 		}
-		uint8_t *buffer = new uint8_t [op->length()];
+		unsigned char *buffer = new uint8_t [op->length()];
 		op->call(this->msg,this->len,buffer);
 		Timestamp *stamp = new Timestamp(buffer,op->length());
 		this->ops.insert(std::pair <Op*, Timestamp*> (op, stamp));

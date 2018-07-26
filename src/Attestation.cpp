@@ -3,15 +3,15 @@
 
 namespace ots{
 
-const uint8_t PendingAttestation::TAG[TimeAttestation::TAG_SIZE] = {(uint8_t) 0x83, (uint8_t) 0xdf, (uint8_t) 0xe3, (uint8_t) 0x0d, (uint8_t) 0x2e, (uint8_t) 0xf9, (uint8_t) 0x0c, (uint8_t) 0x8e};
-const uint8_t BitcoinBlockHeaderAttestation::TAG[TimeAttestation::TAG_SIZE] = {(uint8_t) 0x05, (uint8_t) 0x88, (uint8_t) 0x96, (uint8_t) 0x0d, (uint8_t) 0x73, (uint8_t) 0xd7, (uint8_t) 0x19, (uint8_t) 0x01};
+const unsigned char PendingAttestation::TAG[TimeAttestation::TAG_SIZE] = {(unsigned char) 0x83, (unsigned char) 0xdf, (unsigned char) 0xe3, (unsigned char) 0x0d, (unsigned char) 0x2e, (unsigned char) 0xf9, (unsigned char) 0x0c, (unsigned char) 0x8e};
+const unsigned char BitcoinBlockHeaderAttestation::TAG[TimeAttestation::TAG_SIZE] = {(unsigned char) 0x05, (unsigned char) 0x88, (unsigned char) 0x96, (unsigned char) 0x0d, (unsigned char) 0x73, (unsigned char) 0xd7, (unsigned char) 0x19, (unsigned char) 0x01};
 
 
 void TimeAttestation::serialize(Serialize *ctx) const {
 	Serialize payload_ctx;
 	this->serialize_payload(&payload_ctx);
 
-	uint8_t* payload = (uint8_t* )payload_ctx.data.data();
+	unsigned char* payload = (unsigned char* )payload_ctx.data.data();
 
 	if (const PendingAttestation* pending = dynamic_cast<const PendingAttestation *>(this)) {
 		ctx->write(pending->TAG,pending->TAG_SIZE);
@@ -39,13 +39,13 @@ void BitcoinBlockHeaderAttestation::serialize_payload(Serialize *ctx) const {
 
 TimeAttestation* TimeAttestation::deserialize(Deserialize *ctx){
 	TimeAttestation *attestation;
-	uint8_t tag[TAG_SIZE];
+	unsigned char tag[TAG_SIZE];
 	ctx->read(tag, TAG_SIZE);
-	uint8_t serializedAttestation[MAX_PAYLOAD_SIZE];
-	uint32_t len = ctx->readVaruints(serializedAttestation, MAX_PAYLOAD_SIZE);
+	unsigned char serializedAttestation[MAX_PAYLOAD_SIZE];
+	size_t len = ctx->readVaruints(serializedAttestation, MAX_PAYLOAD_SIZE);
 
-	std::istringstream in((char*)serializedAttestation);
-	Deserialize payloadCtx(&in);
+	std::vector<unsigned char> vector(serializedAttestation,serializedAttestation+len);
+	Deserialize payloadCtx(vector);
 	if (compare(tag,TAG_SIZE,PendingAttestation::TAG,TAG_SIZE)){
 		attestation = PendingAttestation::deserialize(&payloadCtx);
 	} else if (compare(tag,TAG_SIZE,BitcoinBlockHeaderAttestation::TAG,TAG_SIZE)) {
@@ -56,8 +56,8 @@ TimeAttestation* TimeAttestation::deserialize(Deserialize *ctx){
 }
 
 PendingAttestation* PendingAttestation::deserialize(Deserialize *ctx){
-	uint8_t buffer[MAX_URI_LENGTH];
-	uint32_t len = ctx->readVaruints(buffer, MAX_URI_LENGTH);
+	unsigned char buffer[MAX_URI_LENGTH];
+	size_t len = ctx->readVaruints(buffer, MAX_URI_LENGTH);
 	// check uri
 	return new PendingAttestation(buffer, len);
 }

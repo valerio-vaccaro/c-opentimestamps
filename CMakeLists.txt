@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.5.1)
 project(c_opentimestamps)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -19,3 +19,4 @@ target_link_libraries(${PROJECT_NAME} OpenSSL::Crypto)
 set( APP_EXE main )
 add_executable( ${APP_EXE} main.cpp)
 target_link_libraries(${APP_EXE} ${PROJECT_NAME} OpenSSL::Crypto)
+

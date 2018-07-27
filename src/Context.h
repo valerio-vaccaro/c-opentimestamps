@@ -20,7 +20,7 @@ private:
 	std::vector<unsigned char> &data; // data life is owned by the caller
 public:
 	Deserialize(std::vector<unsigned char> &data) : data(data) {}
-	~Deserialize() {}
+	virtual ~Deserialize() {}
 
 	unsigned char read8(){
 		unsigned char first = data.front();

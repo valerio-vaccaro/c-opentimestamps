@@ -81,7 +81,7 @@ public:
 	std::vector<unsigned char> data;
 	int len;
 	Serialize() : len(0) {}
-	~Serialize() {}
+	virtual ~Serialize() {}
 
 	void write(const unsigned char *buffer, const size_t len) {
 		this->len+=len;

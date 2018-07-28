@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <algorithm>
 #include "Common.h"
 
 namespace ots{
@@ -16,10 +17,10 @@ namespace ots{
 class Deserialize
 {
 private:
+	std::vector<unsigned char> &data; // data life is owned by the caller
 public:
-	std::vector<unsigned char> data;
-	Deserialize(std::vector<unsigned char> data) : data(data) {}
-	~Deserialize() {}
+	Deserialize(std::vector<unsigned char> &data) : data(data) {}
+	virtual ~Deserialize() {}
 
 	unsigned char read8(){
 		unsigned char first = data.front();
@@ -80,7 +81,7 @@ public:
 	std::vector<unsigned char> data;
 	int len;
 	Serialize() : len(0) {}
-	~Serialize() {}
+	virtual ~Serialize() {}
 
 	void write(const unsigned char *buffer, const size_t len) {
 		this->len+=len;
